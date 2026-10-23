@@ -79,6 +79,10 @@ DEFAULTS = {
     "map_zoom_auto_zero_speed_z": 16.0,
     "message_jolla_store_last_version": "",
     "navigation_horizontal_accuracy": 15.0,
+    "navigation_info_scale_bicycle": 1.0,
+    "navigation_info_scale_car": 1.0,
+    "navigation_info_scale_foot": 1.0,
+    "navigation_info_scale_transit": 1.0,
     "poi_list_show_bookmarked": False,
     "profile": _default_profile,
     "profiles": {

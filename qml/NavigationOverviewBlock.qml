@@ -71,6 +71,7 @@ Item {
     property string streetName: (gps.streetName !== undefined && gps.streetName !== null &&
                                  gps.streetName.length>0) ? gps.streetName : ""
     property bool   streetNameInOverview: app.mode === modes.navigate && !app.portrait && _splitPossible
+    property real   textScale: app.conf.navigationInfoScale
     property string totalDist: app.navigator.totalDist
 
     // spacing properties
@@ -211,7 +212,7 @@ Item {
         LabelPL {
             anchors.baseline: distLabel.baseline
             color: _pressed ? styler.themeSecondaryHighlightColor : styler.themeSecondaryColor
-            font.pixelSize: styler.themeFontSizeMedium
+            font.pixelSize: styler.themeFontSizeMedium * textScale
             text: navigator.nextLocationDestination ?
                       // TRANSLATORS: "(D)" corresponds to the abbreviated destination
                       app.tr("(D)") :
@@ -227,7 +228,7 @@ Item {
         LabelPL {
             id: distLabel
             color: _pressed ? styler.themeHighlightColor : styler.themePrimaryColor
-            font.pixelSize: styler.themeFontSizeMedium
+            font.pixelSize: styler.themeFontSizeMedium * textScale
             text: block.destDist
         }
 
@@ -238,7 +239,7 @@ Item {
         LabelPL {
             anchors.baseline: distLabel.baseline
             color: _pressed ? styler.themeHighlightColor : styler.themePrimaryColor
-            font.pixelSize: styler.themeFontSizeMedium
+            font.pixelSize: styler.themeFontSizeMedium * textScale
             text: block.destTime
         }
     }
@@ -262,7 +263,7 @@ Item {
         anchors.right: compactRight.left
         anchors.rightMargin: styler.themePaddingLarge
         color: _pressed ? styler.themeHighlightColor : styler.themePrimaryColor
-        font.pixelSize: styler.themeFontSizeMedium
+        font.pixelSize: styler.themeFontSizeMedium * textScale
         text: block.streetName
         truncMode: truncModes.fade
         visible: mode === blockModes.condensedWithStreet && text
@@ -302,7 +303,7 @@ Item {
             id: destEta
             anchors.baseline: destLabel.baseline
             color: _pressed ? styler.themeSecondaryHighlightColor : styler.themeSecondaryColor
-            font.pixelSize: styler.themeFontSizeSmall
+            font.pixelSize: styler.themeFontSizeSmall * textScale
             text: {
                 if (mode === blockModes.condensedSplit && showNextLocation) {
                     return navigator.nextLocationDestination ?
@@ -323,7 +324,7 @@ Item {
             // Estimated time of arrival: shown during navigation and exploreRoute
             id: destLabel
             color: _pressed ? styler.themeHighlightColor : styler.themePrimaryColor
-            font.pixelSize: styler.themeFontSizeMedium
+            font.pixelSize: styler.themeFontSizeMedium * textScale
             height: text ? implicitHeight : 0
             text: block.destEta
         }

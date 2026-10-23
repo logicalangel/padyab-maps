@@ -70,6 +70,21 @@ Item {
     property bool   mapZoomAutoWhenNavigating: false
     property real   mapZoomAutoZeroSpeedZ
     property real   navigationHorizontalAccuracy: 15.0
+    property real   navigationInfoScale: {
+        if (!app || !app.transportMode)
+            return app.conf.navigationInfoScaleCar;
+        if (app.transportMode === "bicycle")
+            return app.conf.navigationInfoScaleBicycle;
+        if (app.transportMode === "foot")
+            return app.conf.navigationInfoScaleFoot;
+        if (app.transportMode === "transit")
+            return app.conf.navigationInfoScaleTransit;
+        return app.conf.navigationInfoScaleCar;
+    }
+    property real   navigationInfoScaleBicycle: 1
+    property real   navigationInfoScaleCar: 1
+    property real   navigationInfoScaleFoot: 1
+    property real   navigationInfoScaleTransit: 1
     property string profile
     property bool   reroute
     property bool   routePageShowDestinationsHelp: true
@@ -125,6 +140,10 @@ Item {
         "mapZoomAutoWhenNavigating": "map_zoom_auto_when_navigating",
         "mapZoomAutoZeroSpeedZ": "map_zoom_auto_zero_speed_z",
         "navigationHorizontalAccuracy": "navigation_horizontal_accuracy",
+        "navigationInfoScaleBicycle": "navigation_info_scale_bicycle",
+        "navigationInfoScaleCar": "navigation_info_scale_car",
+        "navigationInfoScaleFoot": "navigation_info_scale_foot",
+        "navigationInfoScaleTransit": "navigation_info_scale_transit",
         "reroute": "reroute",
         "routePageShowDestinationsHelp": "route_page_show_destinations_help",
         "profile": "profile",

@@ -456,6 +456,22 @@ MouseArea {
                     app.conf.set("map_scale_navigation_" + app.transportMode, value);
                 }
             }
+
+            SliderPL {
+                id: scaleSliderInfo
+                label: app.tr("Route info scale during navigation")
+                maximumValue: 2.0
+                minimumValue: 0.5
+                stepSize: 0.1
+                value: app.transportMode ? app.conf.get("navigation_info_scale_" + app.transportMode) : 1
+                valueText: value
+                visible: app.mode === modes.navigate && app.transportMode
+                width: parent.width
+                onValueChanged: {
+                    if (!app.transportMode) return;
+                    app.conf.set("navigation_info_scale_" + app.transportMode, value);
+                }
+            }
         }
     }
 
