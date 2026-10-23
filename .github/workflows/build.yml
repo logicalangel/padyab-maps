@@ -14,7 +14,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    container: ghcr.io/rinigus/pure-maps-devcontainer-qt5:latest
+    container:
+      image: ghcr.io/rinigus/pure-maps-devcontainer-qt5:latest
+      # the image runs as an unprivileged user, the runner needs root
+      options: --user root
     steps:
       - uses: actions/checkout@v5
         with:
@@ -22,6 +25,7 @@ jobs:
 
       - name: Build (Kirigami, Qt 5)
         run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           cmake --preset debug-kirigami-qt5
           cmake --build build -j"$(nproc)"
 
