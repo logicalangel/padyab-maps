@@ -35,6 +35,7 @@ Item {
     property bool   active: false
     property bool   fillModel: true
     property bool   highlightSelected: true
+    property bool   searchFieldVisible: true // false when the query is typed into another field, see setText
     property string searchPlaceholderText: app.tr("Search")
     property bool   showCurrentPosition: false
     property var    searchResults: [] // current list of found search or autocomplete results
@@ -55,6 +56,7 @@ Item {
     property var    _history: []
     property string _prevAutocompleteQuery: "."
     property var    _resultDetails: {}
+    property string _prevText: ""
     property bool   _searchDone: false
     property string _searchError: ""
     property var    _searchHits: []
@@ -91,27 +93,17 @@ Item {
 
         SearchFieldPL {
             id: searchField
+            height: visible ? implicitHeight : 0
             placeholderText: searchPlaceholderText
             text: query
+            visible: geo.searchFieldVisible
             width: parent.width
-            property string prevText: ""
             onSearch: fetchResults();
-            onTextChanged: {
-                var newText = searchField.text.trim();
-                if (!newText && selection) selection = null;
-                if (!newText && searchResults) searchResults = [];
-                if (newText === searchField.prevText) return;
-                selection = null;
-                geo._searchPending = false;
-                geo._searchDone = false;
-                geo.query = newText;
-                searchField.prevText = newText;
-                geo.update();
-            }
+            onTextChanged: geo.setText(searchField.text)
         }
 
         Spacer {
-            height: styler.themePaddingLarge
+            height: geo.searchFieldVisible ? styler.themePaddingLarge : 0
         }
 
         Repeater {
@@ -355,7 +347,7 @@ Item {
 
     function activate() {
         geo.selection = null;
-        searchField.forceActiveFocus();
+        if (searchFieldVisible) searchField.forceActiveFocus();
     }
 
     function fetchCompletions() {
@@ -556,6 +548,20 @@ Item {
     function loadHistory() {
         // Load search history and preallocate list items.
         geo._history = py.evaluate("poor.app.history.places");
+    }
+
+    function setText(text) {
+        // Update the query from the text typed by the user.
+        var newText = text.trim();
+        if (!newText && selection) selection = null;
+        if (!newText && searchResults) searchResults = [];
+        if (newText === geo._prevText) return;
+        selection = null;
+        geo._searchPending = false;
+        geo._searchDone = false;
+        geo.query = newText;
+        geo._prevText = newText;
+        geo.update();
     }
 
     function setSearchResults(n) {
