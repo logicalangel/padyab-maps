@@ -22,7 +22,7 @@ set(DEFAULT_PROFILE "online" CACHE STRING "Default profile. Supported profile se
 set(DEFAULT_BASEMAP "OpenFreeMap Bright" CACHE STRING "Default basemap for online profile")
 set(DEFAULT_GEOCODER "photon" CACHE STRING "Default geocoder for online profile")
 set(DEFAULT_GUIDE "foursquare" CACHE STRING "Default guide for online profile")
-set(DEFAULT_ROUTER "stadiamaps" CACHE STRING "Default router for online profile")
+set(DEFAULT_ROUTER "fossgis" CACHE STRING "Default router for online profile")
 set(DEFAULT_FONTPROVIDER "openmaptiles" CACHE STRING "Default font provider. Supported: openmaptiles, mapbox, maptiler, osmscout")
 
 # set project version used in About message
