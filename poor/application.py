@@ -117,6 +117,12 @@ class Application:
 
     def set_router(self, router):
         """Set routing provider from string `router`."""
+        default = poor.conf.get_default("router")
+        if router != default and not poor.util.provider_available("routers", router):
+            # a router needing a missing API key would fail on every route
+            print("Router '{}' is missing an API key, using '{}'".format(router, default),
+                  file=sys.stderr)
+            router = default
         try:
             self.router = poor.Router(router)
             poor.conf.set_router(router)

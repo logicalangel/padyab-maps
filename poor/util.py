@@ -387,6 +387,16 @@ def _get_providers(directory, default, active, profile):
     providers.sort(key=lambda x: (not x["available"], x["name"]))
     return providers
 
+def provider_available(directory, pid):
+    """Return False if the provider needs an API key that is missing."""
+    leaf = os.path.join(directory, "{}.json".format(pid))
+    for parent in (poor.DATA_HOME_DIR, poor.DATA_DIR):
+        path = os.path.join(parent, leaf)
+        if os.path.isfile(path):
+            values = read_json(path)
+            return all(poor.key.get(k).strip() for k in values.get("keys", []))
+    return True
+
 def get_routers():
     """Return a list of dictionaries of router attributes."""
     return _get_providers("routers",

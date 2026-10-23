@@ -1,0 +1,12 @@
+{
+    "attribution": {
+        "FOSSGIS": "https://www.fossgis.de",
+        "Valhalla": "https://github.com/valhalla/valhalla",
+        "© OpenStreetMap": "https://www.openstreetmap.org/copyright"
+    },
+    "_description": "Routing by Valhalla based on OpenStreetMap data, public server without API key",
+    "_modes": ["car", "bicycle", "foot"],
+    "name": "Valhalla (FOSSGIS)",
+    "source": "openstreetmap.de",
+    "profiles": ["mixed", "online"]
+}

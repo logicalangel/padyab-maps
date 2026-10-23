@@ -29,7 +29,7 @@ __all__ = ("ConfigurationStore",)
 _default_basemap = "OpenFreeMap Bright"
 _default_geocoder = "photon"
 _default_guide = "foursquare"
-_default_router = "stadiamaps"
+_default_router = "fossgis"
 _default_profile = "online"
 
 DEFAULTS = {
