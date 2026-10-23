@@ -53,7 +53,15 @@ PagePL {
         }
 
         ListItemLabel {
-            height: styler.themeItemSizeExtraSmall
+            font.bold: true
+            font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+            horizontalAlignment: Text.AlignHCenter
+            text: "Pure Maps"
+        }
+
+        ListItemLabel {
+            color: styler.themeSecondaryHighlightColor
+            height: implicitHeight
             horizontalAlignment: Text.AlignHCenter
             text: app.tr("version %1", programVersion)
         }
@@ -71,54 +79,69 @@ PagePL {
             text: app.tr('GitHub <a href="https://github.com/rinigus/pure-maps">project page</a>')
         }
 
-        Column {
+        Rectangle {
+            // credits and license
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: styler.themePaddingSmall
-            width: Math.min(page.height,page.width)
+            color: styler.itemBg
+            height: creditsColumn.height + 2*styler.themePaddingLarge
+            radius: styler.cardRadius
+            width: parent.width - 2*styler.themeHorizontalPageMargin
 
-            ListItemLabel {
-                font.pixelSize: styler.themeFontSizeSmall
-                height: implicitHeight
-                text: "Copyright ©"
+            Column {
+                id: creditsColumn
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: styler.themePaddingLarge
+                width: parent.width
+
+                Column {
+                    id: credits
+                    spacing: styler.themePaddingSmall
+                    width: parent.width
+
+                    ListItemLabel {
+                        font.pixelSize: styler.themeFontSizeSmall
+                        height: implicitHeight
+                        text: "Copyright ©"
+                    }
+
+                    ListItemLabel {
+                        font.pixelSize: styler.themeFontSizeSmall
+                        height: implicitHeight
+                        horizontalAlignment: Text.AlignRight
+                        text: "2014–2018 Osmo Salomaa\n2018-2022 Rinigus"
+                    }
+
+                    ListItemLabel {
+                        font.pixelSize: styler.themeFontSizeSmall
+                        height: implicitHeight
+                        horizontalAlignment: Text.AlignRight
+                        text: app.tr("Artwork by %1 and %2\nBanner photo by %3 (Pexels License)", "Fellfrosch", "Mosen", "Yaroslav Shuraev")
+                        wrapMode: Text.WordWrap
+                    }
+
+                    ListItemLabel {
+                        font.pixelSize: styler.themeFontSizeSmall
+                        height: implicitHeight
+                        horizontalAlignment: Text.AlignRight
+                        text: app.tr('Transportation icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> ' +
+                                     'from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>')
+                        wrapMode: Text.WordWrap
+                    }
+                }
+
+                ListItemLabel {
+                    font.pixelSize: styler.themeFontSizeSmall
+                    height: implicitHeight
+                    horizontalAlignment: implicitWidth >
+                                         parent.width - anchors.leftMargin - anchors.rightMargin ?
+                                             Text.AlignLeft : Text.AlignHCenter
+                    text: app.tr("Pure Maps is free software released under the GNU General Public License (GPL), version 3 or later.")
+                    wrapMode: Text.WordWrap
+                }
             }
-
-            ListItemLabel {
-                font.pixelSize: styler.themeFontSizeSmall
-                height: implicitHeight
-                horizontalAlignment: Text.AlignRight
-                text: "2014–2018 Osmo Salomaa\n2018-2022 Rinigus"
-            }
-
-            ListItemLabel {
-                font.pixelSize: styler.themeFontSizeSmall
-                height: implicitHeight
-                horizontalAlignment: Text.AlignRight
-                text: app.tr("Artwork by %1 and %2\nBanner photo by %3 (Pexels License)", "Fellfrosch", "Mosen", "Yaroslav Shuraev")
-                wrapMode: Text.WordWrap
-            }
-
-            ListItemLabel {
-                font.pixelSize: styler.themeFontSizeSmall
-                height: implicitHeight
-                horizontalAlignment: Text.AlignRight
-                text: app.tr('Transportation icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> ' +
-                             'from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>')
-                wrapMode: Text.WordWrap
-            }
-
         }
 
-        ListItemLabel {
-            font.pixelSize: styler.themeFontSizeSmall
-            height: implicitHeight
-            horizontalAlignment: implicitWidth >
-                                 parent.width - anchors.leftMargin - anchors.rightMargin ?
-                                     Text.AlignLeft : Text.AlignHCenter
-            text: app.tr("Pure Maps is free software released under the GNU General Public License (GPL), version 3 or later.")
-            wrapMode: Text.WordWrap
-        }
-
-        SectionHeaderPL {
+        SectionLabel {
             text: app.tr("Translated by")
         }
 

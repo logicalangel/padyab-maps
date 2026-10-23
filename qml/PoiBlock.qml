@@ -256,7 +256,7 @@ Column {
     }
 
     // Navigation controls
-    SectionHeaderPL {
+    SectionLabel {
         text: navigator.hasDestination || navigator.hasOrigin ? app.tr("Set as or Replace") : app.tr("Set as")
         visible: navigationControls
     }
@@ -316,7 +316,7 @@ Column {
         }
     }
 
-    SectionHeaderPL {
+    SectionLabel {
         text: app.tr("Insert as")
         visible: navigationControls && (navigator.hasOrigin || navigator.hasDestination)
     }

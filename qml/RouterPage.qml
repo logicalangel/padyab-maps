@@ -31,7 +31,7 @@ DialogListPL {
         contentHeight: defaultHeader.height + nameLabel.height +
                        descriptionLabel.anchors.topMargin + descriptionLabel.height
 
-        SectionHeaderPL {
+        SectionLabel {
             id: defaultHeader
             height: model.header ? implicitHeight : 0
             text: model.name

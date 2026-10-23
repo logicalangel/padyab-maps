@@ -185,7 +185,7 @@ Item {
                         height: Math.max(0, styler.themePaddingLarge / 2 - styler.themePaddingSmall)
                     }
 
-                    SectionHeaderPL {
+                    SectionLabel {
                         height: visible ? implicitHeight : 0
                         text: model.markup
                         visible: listItem.header

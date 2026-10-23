@@ -405,7 +405,7 @@ PagePL {
                                 width: keysForm.width
                                 property bool isHeader: model.header
 
-                                SectionHeaderPL {
+                                SectionLabel {
                                     text: model.header
                                     visible: text
                                 }
@@ -757,7 +757,7 @@ PagePL {
                     }
 
 
-                    SectionHeaderPL {
+                    SectionLabel {
                         text: app.tr("Always show")
                     }
 

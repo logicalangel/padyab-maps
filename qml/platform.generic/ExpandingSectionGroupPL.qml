@@ -21,50 +21,93 @@ import pm.platform 1.0
 import pm 1.0
 
 Column {
+    // sections are cards with a header row; one section is open at a time
     id: section
-
     width: parent.width
-    spacing: 0
+    spacing: styler.themePaddingLarge
 
     property int currentIndex // ignored
-
     property list<QtObject> selections
     default property alias  content: section.selections
 
     signal closeAll
 
-    Repeater {
-        delegate: Column {
-            id: del
+    Item {
+        width: parent.width
+        height: styler.themePaddingSmall
+    }
 
-            spacing: 0
-            width: section.width
+    Repeater {
+        delegate: Rectangle {
+            id: del
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: styler.itemBg
+            height: col.height
+            radius: styler.cardRadius
+            width: section.width - 2*styler.themeHorizontalPageMargin
 
             property bool expanded: false
 
-            IconListItem {
-                icon: del.expanded ? styler.iconDown : styler.iconForward
-                iconHeight: styler.themeItemSizeSmall*0.5
-                label: selections[model.index].title
-                labelBold: del.expanded
-                onClicked: {
-                    if (!del.expanded) closeAll();
-                    del.expanded = !del.expanded;
+            Column {
+                id: col
+                width: parent.width
+
+                Rectangle {
+                    // header: title and an arrow, tap to open or close
+                    color: headerMouse.pressed ? styler.itemPressed : "transparent"
+                    height: title.height + 2*styler.themePaddingLarge
+                    radius: styler.cardRadius
+                    width: parent.width
+
+                    LabelPL {
+                        id: title
+                        anchors.left: parent.left
+                        anchors.leftMargin: styler.themePaddingLarge
+                        anchors.right: arrow.left
+                        anchors.rightMargin: styler.themePaddingMedium
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: styler.itemFg
+                        font.bold: del.expanded
+                        font.pixelSize: styler.themeFontSizeLarge
+                        text: selections[model.index].title
+                    }
+
+                    LabelPL {
+                        id: arrow
+                        anchors.right: parent.right
+                        anchors.rightMargin: styler.themePaddingLarge
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: styler.itemFg
+                        font.pixelSize: styler.themeFontSizeLarge
+                        opacity: 0.4
+                        rotation: del.expanded ? 90 : 0
+                        text: "\u203A"
+                    }
+
+                    MouseArea {
+                        id: headerMouse
+                        anchors.fill: parent
+                        onClicked: {
+                            if (!del.expanded) closeAll();
+                            del.expanded = !del.expanded;
+                        }
+                    }
                 }
-            }
 
-            Item {
-                id: item
-                anchors.left: parent.left
-                anchors.right: parent.right
-                data: selections[model.index]
-                height: childrenRect.height
-                visible: del.expanded
-            }
+                Item {
+                    id: item
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    data: selections[model.index]
+                    height: childrenRect.height
+                    visible: del.expanded
+                }
 
-            Spacer {
-                height: styler.themePaddingLarge
-                visible: del.expanded
+                Item {
+                    height: styler.themePaddingLarge
+                    visible: del.expanded
+                    width: parent.width
+                }
             }
 
             Connections {
@@ -72,7 +115,11 @@ Column {
                 function onCloseAll() { del.expanded = false; }
             }
         }
-
         model: selections.length
+    }
+
+    Item {
+        width: parent.width
+        height: styler.themePaddingSmall
     }
 }

@@ -39,6 +39,22 @@ Item {
 
     signal clicked
 
+    Rectangle {
+        // rows are drawn as a plain list: card colored rows with dividers
+        anchors.fill: parent
+        color: styler.itemBg
+
+        Rectangle {
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.leftMargin: styler.themeHorizontalPageMargin
+            anchors.right: parent.right
+            color: styler.itemFg
+            height: 1
+            opacity: 0.08
+        }
+    }
+
     ItemDelegate {
         id: item
 

@@ -50,77 +50,108 @@ PagePL {
         id: column
         width: page.width
 
-        ListItemLabel {
-            color: styler.themeHighlightColor
-            height: implicitHeight + styler.themePaddingMedium
-            text: poi.poiType ? poi.poiType : ""
-            truncMode: truncModes.none
-            verticalAlignment: Text.AlignTop
-            visible: text
-            wrapMode: Text.WordWrap
-        }
+        Rectangle {
+            // type and coordinates
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: styler.itemBg
+            height: infoColumn.height + 2*styler.themePaddingMedium
+            radius: styler.cardRadius
+            width: parent.width - 2*styler.themeHorizontalPageMargin
 
-        ListItemLabel {
-            color: styler.themeHighlightColor
-            font.pixelSize: styler.themeFontSizeSmall
-            height: implicitHeight + styler.themePaddingMedium
-            text: hasCoordinate ? app.tr("Latitude: %1", poi.coordinate.latitude) + "\n" +
-                                  app.tr("Longitude: %2", poi.coordinate.longitude) : ""
-            truncMode: truncModes.none
-            verticalAlignment: Text.AlignTop
-            visible: text
-            wrapMode: Text.WordWrap
-        }
+            Column {
+                id: infoColumn
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
 
-        ListItemLabel {
-            color: styler.themeHighlightColor
-            font.pixelSize: styler.themeFontSizeSmall
-            height: implicitHeight + styler.themePaddingMedium
-            text: hasCoordinate ? app.tr("Plus code: %1",
-                                         py.call_sync("poor.util.format_location_olc",
-                                                      [poi.coordinate.longitude,
-                                                       poi.coordinate.latitude])) : ""
-            truncMode: truncModes.none
-            verticalAlignment: Text.AlignTop
-            visible: text
-            wrapMode: Text.WordWrap
+                ListItemLabel {
+                    color: styler.themeHighlightColor
+                    height: implicitHeight + styler.themePaddingMedium
+                    text: poi.poiType ? poi.poiType : ""
+                    truncMode: truncModes.none
+                    verticalAlignment: Text.AlignTop
+                    visible: text
+                    wrapMode: Text.WordWrap
+                }
+
+                ListItemLabel {
+                    color: styler.themeHighlightColor
+                    font.pixelSize: styler.themeFontSizeSmall
+                    height: implicitHeight + styler.themePaddingMedium
+                    text: hasCoordinate ? app.tr("Latitude: %1", poi.coordinate.latitude) + "\n" +
+                                          app.tr("Longitude: %2", poi.coordinate.longitude) : ""
+                    truncMode: truncModes.none
+                    verticalAlignment: Text.AlignTop
+                    visible: text
+                    wrapMode: Text.WordWrap
+                }
+
+                ListItemLabel {
+                    color: styler.themeHighlightColor
+                    font.pixelSize: styler.themeFontSizeSmall
+                    height: implicitHeight + styler.themePaddingMedium
+                    text: hasCoordinate ? app.tr("Plus code: %1",
+                                                 py.call_sync("poor.util.format_location_olc",
+                                                              [poi.coordinate.longitude,
+                                                               poi.coordinate.latitude])) : ""
+                    truncMode: truncModes.none
+                    verticalAlignment: Text.AlignTop
+                    visible: text
+                    wrapMode: Text.WordWrap
+                }
+            }
         }
 
         Spacer {
             height: styler.themePaddingMedium
         }
 
-        SectionHeaderPL {
+        SectionLabel {
             height: implicitHeight + styler.themePaddingMedium
             text: poi.address || poi.postcode ? app.tr("Address") : ""
             visible: text
         }
 
-        ListItemLabel {
-            color: styler.themeHighlightColor
-            height: implicitHeight + styler.themePaddingMedium
-            text: poi.address ? poi.address : ""
-            truncMode: truncModes.none
-            verticalAlignment: Text.AlignTop
-            visible: text
-            wrapMode: Text.WordWrap
-        }
+        Rectangle {
+            // address
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: styler.itemBg
+            height: addressColumn.height + 2*styler.themePaddingMedium
+            radius: styler.cardRadius
+            visible: poi.address || poi.postcode ? true : false
+            width: parent.width - 2*styler.themeHorizontalPageMargin
 
-        ListItemLabel {
-            color: styler.themeHighlightColor
-            height: implicitHeight + styler.themePaddingMedium
-            text: poi.postcode ? app.tr("Postal code: %1", poi.postcode) : ""
-            truncMode: truncModes.none
-            verticalAlignment: Text.AlignTop
-            visible: text
-            wrapMode: Text.WordWrap
+            Column {
+                id: addressColumn
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+
+                ListItemLabel {
+                    color: styler.themeHighlightColor
+                    height: implicitHeight + styler.themePaddingMedium
+                    text: poi.address ? poi.address : ""
+                    truncMode: truncModes.none
+                    verticalAlignment: Text.AlignTop
+                    visible: text
+                    wrapMode: Text.WordWrap
+                }
+
+                ListItemLabel {
+                    color: styler.themeHighlightColor
+                    height: implicitHeight + styler.themePaddingMedium
+                    text: poi.postcode ? app.tr("Postal code: %1", poi.postcode) : ""
+                    truncMode: truncModes.none
+                    verticalAlignment: Text.AlignTop
+                    visible: text
+                    wrapMode: Text.WordWrap
+                }
+            }
         }
 
         Spacer {
             height: styler.themePaddingMedium
         }
 
-        SectionHeaderPL {
+        SectionLabel {
             height: implicitHeight + styler.themePaddingMedium
             text: app.tr("Actions")
         }
@@ -216,7 +247,7 @@ PagePL {
             }
         }
 
-        SectionHeaderPL {
+        SectionLabel {
             height: text ? implicitHeight + styler.themePaddingMedium : 0
             text: poi.phone || poi.link ? app.tr("Contact") : ""
             visible: text
@@ -250,7 +281,7 @@ PagePL {
             height: styler.themePaddingMedium
         }
 
-        SectionHeaderPL {
+        SectionLabel {
             height: text ? implicitHeight + styler.themePaddingMedium : 0
             text: poi.text ? app.tr("Additional info") : ""
             visible: text

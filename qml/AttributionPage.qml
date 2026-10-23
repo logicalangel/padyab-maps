@@ -29,7 +29,7 @@ PagePL {
         Column {
             width: parent.width
 
-            SectionHeaderPL {
+            SectionLabel {
                 text: app.tr("Maps")
                 visible: mapRepeater.model > 0
             }
@@ -57,7 +57,7 @@ PagePL {
 
         Column {
             width: parent.width
-            SectionHeaderPL {
+            SectionLabel {
                 text: app.tr("Search")
                 visible: geocodeRepeater.model > 0
             }
@@ -86,7 +86,7 @@ PagePL {
 
         Column {
             width: parent.width
-            SectionHeaderPL {
+            SectionLabel {
                 text: app.tr("Venues")
                 visible: venueRepeater.model > 0
             }
@@ -115,7 +115,7 @@ PagePL {
 
         Column {
             width: parent.width
-            SectionHeaderPL {
+            SectionLabel {
                 text: app.tr("Navigation")
                 visible: routeRepeater.model > 0
             }

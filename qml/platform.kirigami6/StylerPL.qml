@@ -34,8 +34,8 @@ QtObject {
     property color  blockBg: Kirigami.Theme.backgroundColor
     property string navigationIconsVariant: darkTheme ? "white" : "black"
     property color  themeHighlightColor: Kirigami.Theme.textColor
-    property color  themePrimaryColor: Kirigami.Theme.linkColor
-    property color  themeSecondaryColor: Kirigami.Theme.visitedLinkColor
+    property color  themePrimaryColor: Kirigami.Theme.textColor
+    property color  themeSecondaryColor: Kirigami.Theme.disabledTextColor
     property color  themeSecondaryHighlightColor: Kirigami.Theme.disabledTextColor
 
     property real   themeButtonWidthLarge: 256

@@ -35,14 +35,14 @@ ListItemPL {
         anchors.left: parent.left
         anchors.leftMargin: styler.themeHorizontalPageMargin
         anchors.verticalCenter: parent.verticalCenter
-        iconHeight: styler.themeItemSizeSmall*0.8
+        iconHeight: Math.round(styler.themeIconSizeSmall * 0.8)
         iconName: item.icon
     }
 
     LabelPL {
         id: label
         anchors.left: icon.right
-        anchors.leftMargin: styler.themePaddingMedium
+        anchors.leftMargin: styler.themePaddingLarge
         anchors.right: parent.right
         anchors.rightMargin: styler.themeHorizontalPageMargin
         color: {
