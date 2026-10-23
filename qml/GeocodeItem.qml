@@ -113,8 +113,9 @@ Item {
                 id: listItem
                 contentHeight: {
                     if (!visible) return 0;
-                    if (setHeightToSmall && styler.themeItemSizeSmall > itemColumn.height)
-                        return styler.themeItemSizeSmall;
+                    // rows as tall as the rows of other lists on cards
+                    if (setHeightToSmall && styler.themeItemSizeSmall * 1.25 > itemColumn.height)
+                        return styler.themeItemSizeSmall * 1.25;
                     return itemColumn.height
                 }
                 menu: ContextMenuPL {
@@ -150,7 +151,7 @@ Item {
                     if (model.type === "autocomplete" || model.type === "result") return styler.iconNearby;
                     return "";
                 }
-                property real badgeSize: Math.round(styler.themeIconSizeSmall * 1.1)
+                property real badgeSize: Math.round(styler.themeFontSizeMedium * 2.4)
                 property real textMargin: badgeIcon ? styler.themeHorizontalPageMargin + badgeSize + styler.themePaddingLarge :
                                                       styler.themeHorizontalPageMargin
 
@@ -182,7 +183,7 @@ Item {
 
                     Spacer {
                         id: extraSpacer
-                        height: Math.max(0, styler.themePaddingLarge / 2 - styler.themePaddingSmall)
+                        height: styler.themePaddingMedium
                     }
 
                     SectionLabel {
@@ -205,7 +206,7 @@ Item {
                     ListItemLabel {
                         anchors.leftMargin: listItem.textMargin
                         color: listItem.highlighted ? styler.themeSecondaryHighlightColor : styler.themeSecondaryColor
-                        font.pixelSize: styler.themeFontSizeExtraSmall
+                        font.pixelSize: styler.themeFontSizeSmall
                         height: visible ? implicitHeight : 0
                         text: {
                             if (model.distance && model.description)

@@ -19,25 +19,47 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
+// Settings row: label on the left, switch on the right and an
+// optional description below
 Item {
     id: item
-    height: sw.height + desc.height + desc.anchors.topMargin
+    height: row.height + desc.height + desc.anchors.topMargin
     width: parent.width
 
     property alias checked: sw.checked
     property alias description: desc.text
-    property alias text: sw.text
-
+    property alias text: lab.text
     property real leftMargin // ignoring this property
 
-    Switch {
-        id: sw
+    Item {
+        id: row
         anchors.left: parent.left
-        anchors.leftMargin: styler.themeHorizontalPageMargin
         anchors.right: parent.right
-        anchors.rightMargin: styler.themeHorizontalPageMargin
-        anchors.top: parent.top
-        font.pixelSize: styler.themeFontSizeMedium
+        height: Math.max(lab.height, sw.height) + 2*styler.themePaddingSmall
+
+        Label {
+            id: lab
+            anchors.left: parent.left
+            anchors.leftMargin: styler.themeHorizontalPageMargin
+            anchors.right: sw.left
+            anchors.rightMargin: styler.themePaddingMedium
+            anchors.verticalCenter: parent.verticalCenter
+            font.pixelSize: styler.themeFontSizeMedium
+            wrapMode: Text.WordWrap
+
+            MouseArea {
+                anchors.fill: parent
+                enabled: item.enabled
+                onClicked: sw.toggle()
+            }
+        }
+
+        Switch {
+            id: sw
+            anchors.right: parent.right
+            anchors.rightMargin: styler.themeHorizontalPageMargin
+            anchors.verticalCenter: parent.verticalCenter
+        }
     }
 
     Label {
@@ -46,8 +68,9 @@ Item {
         anchors.leftMargin: styler.themeHorizontalPageMargin
         anchors.right: parent.right
         anchors.rightMargin: styler.themeHorizontalPageMargin
-        anchors.top: sw.bottom
+        anchors.top: row.bottom
         anchors.topMargin: text ? styler.themePaddingSmall : 0
+        color: styler.themeSecondaryHighlightColor
         font.pixelSize: styler.themeFontSizeSmall
         height: text ? implicitHeight : 0
         visible: text

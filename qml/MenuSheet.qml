@@ -81,7 +81,7 @@ MouseArea {
                         anchors.verticalCenter: parent.verticalCenter
                         color: styler.itemFg
                         font.bold: true
-                        font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+                        font.pixelSize: styler.cardTitleFontSize
                         text: "Pure Maps"
                     }
 
@@ -90,7 +90,7 @@ MouseArea {
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         cross: true
-                        size: Math.round(styler.themeIconSizeSmall * 1.2)
+                        size: Math.round(styler.cardButtonSize * 0.8)
                         onClicked: master.openMenu = false
                     }
                 }

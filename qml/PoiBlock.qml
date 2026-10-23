@@ -86,7 +86,7 @@ Column {
             anchors.top: parent.top
             color: styler.itemFg
             font.bold: true
-            font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.1)
+            font.pixelSize: styler.cardTitleFontSize
             text: item.title
             wrapMode: Text.WordWrap
         }
@@ -97,7 +97,7 @@ Column {
             anchors.rightMargin: styler.themeHorizontalPageMargin
             anchors.top: parent.top
             cross: true
-            size: Math.round(styler.themeIconSizeSmall * 1.2)
+            size: Math.round(styler.cardButtonSize * 0.8)
             onClicked: app.infoPanel.hidePoi()
         }
     }

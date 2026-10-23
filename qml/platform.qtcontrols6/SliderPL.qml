@@ -19,9 +19,10 @@
 import QtQuick
 import QtQuick.Controls
 
+// Settings row: label and value on top, the slider below it and an
+// optional description under the slider
 Item {
-    height: val.height +
-            styler.themeFontSizeLarge + styler.themePaddingSmall +
+    height: lab.height + val.height + 2*styler.themePaddingSmall +
             desc.height + desc.anchors.topMargin
 
     property alias description: desc.text
@@ -37,35 +38,42 @@ Item {
         id: lab
         anchors.left: parent.left
         anchors.leftMargin: styler.themeHorizontalPageMargin
-        anchors.verticalCenter: val.verticalCenter
-    }
-
-    Slider {
-        id: val
-        anchors.left: lab.right
-        anchors.leftMargin: styler.themePaddingMedium
-        anchors.right: parent.right
-        anchors.rightMargin: styler.themeHorizontalPageMargin
+        anchors.right: valTxt.left
+        anchors.rightMargin: styler.themePaddingMedium
         anchors.top: parent.top
-        anchors.topMargin: styler.themeFontSizeSmall + styler.themePaddingMedium
+        anchors.topMargin: styler.themePaddingSmall
+        elide: Text.ElideRight
+        font.pixelSize: styler.themeFontSizeMedium
     }
 
     Label {
         id: valTxt
-        anchors.bottom: val.top
-        anchors.bottomMargin: val.pressed ? styler.themePaddingSmall : 0
-        x: val.x + val.handle.x + val.handle.width/2 - width/2
+        anchors.baseline: lab.baseline
+        anchors.right: parent.right
+        anchors.rightMargin: styler.themeHorizontalPageMargin
+        color: styler.themeSecondaryHighlightColor
+        font.pixelSize: styler.themeFontSizeMedium
         text: valueText.toFixed(valueTextDecimalPlaces)
-        font.pixelSize: val.pressed ? styler.themeFontSizeLarge : styler.themeFontSizeMedium
+    }
+
+    Slider {
+        id: val
+        anchors.left: parent.left
+        anchors.leftMargin: styler.themeHorizontalPageMargin
+        anchors.right: parent.right
+        anchors.rightMargin: styler.themeHorizontalPageMargin
+        anchors.top: lab.bottom
     }
 
     Label {
         id: desc
-        anchors.left: lab.right
+        anchors.left: parent.left
+        anchors.leftMargin: styler.themeHorizontalPageMargin
         anchors.right: parent.right
         anchors.rightMargin: styler.themeHorizontalPageMargin
         anchors.top: val.bottom
         anchors.topMargin: text ? styler.themePaddingSmall : 0
+        color: styler.themeSecondaryHighlightColor
         font.pixelSize: styler.themeFontSizeSmall
         height: text ? implicitHeight : 0
         visible: text

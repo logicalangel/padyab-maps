@@ -27,7 +27,7 @@ Rectangle {
         if (primary) return mouse.pressed ? Qt.darker(styler.route, 1.2) : styler.route;
         return mouse.pressed ? styler.itemPressed : baseColor;
     }
-    height: Math.round(styler.themeIconSizeSmall * 2)
+    height: styler.cardTileHeight
     opacity: enabled ? 1 : 0.5
     radius: styler.cardRadius * 0.75
 

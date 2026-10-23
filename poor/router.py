@@ -148,10 +148,10 @@ class Router:
             route = self._provider.route(locations=locations, params=params)
         except socket.timeout:
             return dict(error=True, message=_("Connection timed out"))
-        except Exception:
+        except Exception as error:
             print("Routing failed:", file=sys.stderr)
             traceback.print_exc()
-            return dict(error=True)
+            return dict(error=True, message=str(error))
         if isinstance(route, dict):
             route["provider"] = self.id
             self._process_route(route)

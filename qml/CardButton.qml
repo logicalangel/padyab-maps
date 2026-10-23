@@ -30,7 +30,7 @@ Rectangle {
     property bool  cross: false
     property alias iconName: icon.iconName
     property alias iconSource: icon.iconSource // own icon with a white variant, preferred over iconName
-    property real  size: Math.round(styler.themeIconSizeSmall * 1.6)
+    property real  size: styler.cardButtonSize
 
     property color _fg: styler.itemFg
 

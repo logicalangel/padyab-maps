@@ -29,7 +29,12 @@ StylerPL {
                                           styler.blockBg.g*0.8 + styler.themeHighlightColor.g*0.2,
                                           styler.blockBg.b*0.8 + styler.themeHighlightColor.b*0.2,
                                           styler.blockBg.a*0.8 + styler.themeHighlightColor.a*0.2)
+    // sizes on cards and sheets, relative to the regular text - do not change in defaults or style
+    property int    cardButtonSize: Math.round(styler.themeFontSizeMedium * 2.6)
     property real   cardRadius: 1.25*styler.themePaddingLarge // floating cards radius - do not change in defaults or style
+    property int    cardTileHeight: Math.round(styler.themeFontSizeMedium * 3.6)
+    property int    cardTitleFontSize: Math.round(styler.themeFontSizeMedium * 1.55)
+    property int    cardValueFontSize: Math.round(styler.themeFontSizeMedium * 1.45)
     property string endBg                // background of buttons ending navigation
     property string fg                   // foreground color (scale bar, metrics)
     property string goBg                 // background of buttons starting navigation

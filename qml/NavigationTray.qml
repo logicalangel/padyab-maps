@@ -112,7 +112,7 @@ Item {
                 // remaining time
                 color: styler.itemFg
                 font.bold: true
-                font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * tray.textScale)
+                font.pixelSize: Math.round(styler.cardValueFontSize * 1.15 * tray.textScale)
                 horizontalAlignment: Text.AlignHCenter
                 text: {
                     if (tray.arrived) return app.tr("Arrived");

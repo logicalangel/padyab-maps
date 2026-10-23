@@ -64,6 +64,7 @@ Item {
     property int    rerouteConsecutiveIgnored: 0
     property real   reroutePreviousTime: -1
     property bool   routing: false
+    property string routingError: "" // reason of the last failed routing, shown to the user
     property alias  roundaboutExit: navigatorBase.roundaboutExit
     property alias  route:     navigatorBase.route
     property alias  running:   navigatorBase.running
@@ -199,6 +200,7 @@ Item {
 
     function clearRoute() {
         alternatives = [];
+        routingError = "";
         navigatorBase.clearRoute();
         provider = "";
         summary = {};
@@ -212,8 +214,10 @@ Item {
         var notifyId = "route";
         var loc = locations || navigatorBase.locations;
         // note that GPX trace does not use locations
+        routingError = "";
         if (loc.length >= 1 && !loc[0].origin) {
             if (!gps.coordinateValid) {
+                routingError = app.tr("Current position not known yet");
                 app.notification.flash(app.tr("Routing failed: current position not known"), notifyId);
                 return;
             }
@@ -244,6 +248,7 @@ Item {
                 route = route[0];
             }
             if (route && route.error && route.message) {
+                routingError = route.message;
                 app.notification.flash(app.tr("Routing failed: %1").arg(route.message), notifyId);
                 if (options.voicePrompt) navigatorBase.prompt("std:routing failed");
                 rerouteConsecutiveErrors++;
@@ -263,6 +268,7 @@ Item {
                     saveLocations();
                 }
             } else {
+                routingError = app.tr("The routing service did not give a route");
                 app.notification.flash(app.tr("Routing failed"), notifyId);
                 if (options.voicePrompt) navigatorBase.prompt("std:routing failed");
                 rerouteConsecutiveErrors++;

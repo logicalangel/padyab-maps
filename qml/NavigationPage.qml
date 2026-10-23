@@ -52,7 +52,7 @@ PagePL {
                 LabelPL {
                     color: styler.itemFg
                     font.bold: true
-                    font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+                    font.pixelSize: styler.cardTitleFontSize
                     text: {
                         if (app.mode === modes.navigatePost) return app.tr("Destination reached");
                         return app.navigator.destTime || app.navigator.totalTime || "";
@@ -261,7 +261,7 @@ PagePL {
                             anchors.rightMargin: styler.themePaddingLarge
                             anchors.verticalCenter: parent.verticalCenter
                             cross: true
-                            size: Math.round(styler.themeIconSizeSmall)
+                            size: Math.round(styler.cardButtonSize * 0.8)
                             visible: locItem.removable
                             onClicked: locRep.removeLocationAndReroute(model.activeIndex)
                         }

@@ -58,7 +58,7 @@ Column {
                 anchors.leftMargin: styler.themePaddingLarge
                 anchors.top: texts.top
                 color: listItem.active ? styler.route : Qt.rgba(_fg.r, _fg.g, _fg.b, 0.08)
-                height: Math.round(styler.themeIconSizeSmall * 1.2)
+                height: Math.round(styler.cardButtonSize * 0.8)
                 radius: height / 2
                 width: height
 

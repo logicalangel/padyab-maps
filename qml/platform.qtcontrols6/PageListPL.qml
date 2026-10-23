@@ -22,6 +22,8 @@ import pm.platform 1.0
 
 Page {
     id: page
+    // gray page, so that white cards and lists stand out
+    background: Rectangle { color: styler.sheetBg }
     header: HeaderBarImpl {
         page: page
         onAccepted: app.pages.navigateForward();

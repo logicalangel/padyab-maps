@@ -35,7 +35,7 @@ ListItemPL {
         anchors.left: parent.left
         anchors.leftMargin: styler.themeHorizontalPageMargin
         anchors.verticalCenter: parent.verticalCenter
-        iconHeight: Math.round(styler.themeIconSizeSmall * 0.8)
+        iconHeight: Math.round(styler.themeFontSizeMedium * 1.6)
         iconName: item.icon
     }
 

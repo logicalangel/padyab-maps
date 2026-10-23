@@ -39,7 +39,7 @@ Rectangle {
         anchors.leftMargin: styler.themePaddingLarge
         anchors.verticalCenter: parent.verticalCenter
         iconColorize: false
-        iconHeight: Math.round(styler.themeIconSizeSmall * 0.8)
+        iconHeight: Math.round(styler.themeFontSizeMedium * 1.6)
     }
 
     LabelPL {

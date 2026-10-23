@@ -54,7 +54,7 @@ PagePL {
 
         ListItemLabel {
             font.bold: true
-            font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+            font.pixelSize: styler.cardTitleFontSize
             horizontalAlignment: Text.AlignHCenter
             text: "Pure Maps"
         }

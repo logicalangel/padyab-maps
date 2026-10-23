@@ -32,7 +32,7 @@ Item {
     anchors.left: parent.left
     // the item keeps the collapsed size, the expanded card grows over the map
     height: visible ? collapsedHeight + styler.themePaddingMedium : 0
-    visible: !app.modalDialog && !app.infoPanelOpen && app.mode === modes.explore
+    visible: !app.modalDialog && !app.infoPanelOpen && app.mode === modes.explore && !routeSheet.visible
     width: app.portrait ? parent.width : Math.round(parent.width * 0.42) + styler.themePaddingMedium
     z: expanded ? 950 : 400
 

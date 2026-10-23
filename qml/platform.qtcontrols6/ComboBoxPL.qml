@@ -19,13 +19,15 @@
 import QtQuick
 import QtQuick.Controls
 
+// Settings row: label on the left, the choice on the right and an
+// optional description below
 Item {
     id: item
     anchors.left: parent.left
     anchors.leftMargin: styler.themeHorizontalPageMargin
     anchors.right: parent.right
     anchors.rightMargin: styler.themeHorizontalPageMargin
-    height: Math.max(lab.height, val.height) + desc.height + desc.anchors.topMargin
+    height: val.height + 2*styler.themePaddingSmall + desc.height + desc.anchors.topMargin
 
     property int   currentIndex
     property alias description: desc.text
@@ -35,22 +37,29 @@ Item {
 
     Label {
         id: lab
-        anchors.verticalCenter: val.verticalCenter
         anchors.left: parent.left
+        anchors.right: val.left
+        anchors.rightMargin: styler.themePaddingMedium
+        anchors.verticalCenter: val.verticalCenter
+        elide: Text.ElideRight
+        font.pixelSize: styler.themeFontSizeMedium
     }
 
     ComboBox {
         id: val
-        anchors.left: lab.right
-        anchors.leftMargin: styler.themePaddingMedium
-        anchors.right: item.right
+        anchors.right: parent.right
         anchors.top: parent.top
+        anchors.topMargin: styler.themePaddingSmall
         font.pixelSize: styler.themeFontSizeMedium
+        width: Math.min(Math.max(implicitWidth, item.width * 0.4), item.width * 0.6)
+
         property bool initialized: false
+
         onCurrentIndexChanged: {
             if (initialized && currentIndex != item.currentIndex)
                 item.currentIndex = currentIndex;
         }
+
         Component.onCompleted: {
             currentIndex = item.currentIndex;
             initialized = true;
@@ -59,10 +68,11 @@ Item {
 
     Label {
         id: desc
-        anchors.left: lab.right
+        anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: val.bottom
         anchors.topMargin: text ? styler.themePaddingSmall : 0
+        color: styler.themeSecondaryHighlightColor
         font.pixelSize: styler.themeFontSizeSmall
         height: text ? implicitHeight : 0
         visible: text

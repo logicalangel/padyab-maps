@@ -32,7 +32,7 @@ Item {
     y: navigationSign.y + navigationSign.height + styler.themePaddingLarge
     z: 500
 
-    property real buttonSize: Math.round(styler.themeIconSizeSmall * 1.6)
+    property real buttonSize: styler.cardButtonSize
     // always shown while exploring, hidden in the clean mode while moving
     property bool hidden: app.modalDialog || app.infoPanelOpen ||
                           (map.cleanMode && app.mode !== modes.explore &&

@@ -28,7 +28,10 @@ Item {
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     height: visible ? card.height + styler.themePaddingMedium : 0
-    visible: !app.modalDialog && app.mode === modes.exploreRoute
+    // also shown while the first route is searched for and when it fails
+    visible: !app.modalDialog && (app.mode === modes.exploreRoute ||
+                                  (app.mode === modes.explore && !app.infoPanelOpen &&
+                                   (app.navigator.routing || app.navigator.routingError)))
     width: app.portrait ? parent.width : Math.round(parent.width * 0.42) + styler.themePaddingMedium
     z: 400
 
@@ -44,11 +47,13 @@ Item {
         return loc[0].text || "";
     }
     property string destination: {
+        // before routing from the current position, only the destination is known
         var loc = app.navigator.locations;
-        if (!loc || loc.length < 2) return "";
+        if (!loc || loc.length < 1) return "";
         return loc[loc.length - 1].text || "";
     }
     property real   padding: styler.themePaddingLarge
+    property bool   pending: app.mode !== modes.exploreRoute
     property var    routes: {
         var alternatives = app.navigator.alternatives;
         if (alternatives.length > 1) {
@@ -110,7 +115,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     color: styler.itemFg
                     font.bold: true
-                    font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+                    font.pixelSize: styler.cardTitleFontSize
                     text: app.tr("Directions")
                     truncMode: truncModes.fade
                 }
@@ -120,7 +125,7 @@ Item {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     cross: true
-                    size: Math.round(styler.themeIconSizeSmall * 1.2)
+                    size: Math.round(styler.cardButtonSize * 0.8)
                     onClicked: {
                         notification.flash(app.tr("Route removed"), "navigationClear");
                         app.navigator.clearRoute();
@@ -195,8 +200,56 @@ Item {
                 }
             }
 
+            Rectangle {
+                // progress or failure of the route search
+                color: styler.itemBg
+                height: statusColumn.height + 2*styler.themePaddingLarge
+                radius: styler.cardRadius
+                visible: sheet.pending
+                width: parent.width
+
+                Column {
+                    id: statusColumn
+                    anchors.left: parent.left
+                    anchors.leftMargin: styler.themePaddingLarge
+                    anchors.right: parent.right
+                    anchors.rightMargin: styler.themePaddingLarge
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: styler.themePaddingLarge
+
+                    Row {
+                        spacing: styler.themePaddingLarge
+                        width: parent.width
+
+                        BusyIndicatorSmallPL {
+                            anchors.verticalCenter: parent.verticalCenter
+                            running: app.navigator.routing
+                            visible: running
+                        }
+
+                        LabelPL {
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: styler.itemFg
+                            font.pixelSize: styler.themeFontSizeMedium
+                            text: app.navigator.routing ? app.tr("Finding routes…") :
+                                                          app.tr("No route found: %1").arg(app.navigator.routingError)
+                            width: parent.width - (app.navigator.routing ? parent.spacing + styler.themeIconSizeSmall : 0)
+                            wrapMode: Text.WordWrap
+                        }
+                    }
+
+                    ActionTile {
+                        label: app.tr("Try again")
+                        primary: true
+                        visible: !app.navigator.routing
+                        width: parent.width
+                        onClicked: app.navigator.findRoute(null, {"fitToView": true})
+                    }
+                }
+            }
+
             Repeater {
-                model: sheet.routes
+                model: sheet.pending ? [] : sheet.routes
 
                 Rectangle {
                     // one route: tap to select it, tap the selected one for details
@@ -229,7 +282,7 @@ Item {
                         LabelPL {
                             color: styler.itemFg
                             font.bold: true
-                            font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.1)
+                            font.pixelSize: styler.cardValueFontSize
                             text: modelData.time || ""
                         }
 
@@ -270,7 +323,7 @@ Item {
                         anchors.rightMargin: styler.themePaddingLarge
                         anchors.verticalCenter: parent.verticalCenter
                         color: goMouse.pressed ? Qt.darker(styler.goBg, 1.2) : styler.goBg
-                        height: Math.round(styler.themeIconSizeSmall * 2)
+                        height: styler.cardTileHeight
                         radius: styler.cardRadius * 0.75
                         width: Math.max(goLabel.width + 2*styler.themePaddingLarge, Math.round(height * 1.2))
 
