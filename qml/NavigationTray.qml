@@ -44,14 +44,14 @@ Item {
     property bool   showNextLocation: app.navigator.hasNextLocation
     property real   textScale: app.conf.navigationInfoScale
 
+    CardShadow { target: card }
+
     Rectangle {
         id: card
         anchors.bottom: parent.bottom
         anchors.bottomMargin: styler.themePaddingMedium
         color: styler.itemBg
         height: Math.max(endButton.height, info.height) + 2*styler.themePaddingLarge
-        layer.enabled: true
-        layer.effect: ShadowPL { }
         radius: styler.cardRadius
         width: parent.width - (app.portrait ? 2 : 1)*x
         x: styler.themePaddingMedium

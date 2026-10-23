@@ -23,10 +23,9 @@ Rectangle {
     id: panel
     anchors.left: parent.left
     anchors.right: parent.right
-    color: styler.blockBg
+    // the panel is drawn as a floating card inside its area
+    color: "transparent"
     height: 0
-    layer.enabled: contentHeight ? true : false
-    layer.effect: ShadowPL { }
     y: mode === panelModes.bottom ? parent.height - _offset : -height + _offset
     z: 1000
 
@@ -42,6 +41,7 @@ Rectangle {
 
     // internal properties
     default property alias _content: itemCont.data
+    property real _margin: styler.themePaddingMedium
     property bool _hiding: false
     property int  _offset: 0
 
@@ -67,9 +67,25 @@ Rectangle {
         }
     }
 
+    CardShadow {
+        target: card
+        visible: contentHeight > 0
+    }
+
+    Rectangle {
+        id: card
+        anchors.fill: parent
+        anchors.bottomMargin: panel.mode === panelModes.bottom ? _margin : 0
+        anchors.leftMargin: _margin
+        anchors.rightMargin: _margin
+        anchors.topMargin: panel.mode === panelModes.top ? _margin : 0
+        color: styler.itemBg
+        radius: styler.cardRadius * 1.4
+    }
+
     MouseArea {
         id: mouse
-        anchors.fill: parent
+        anchors.fill: card
         drag.axis: Drag.YAxis
         // "filterChildren" makes sometimes parts of the panel transparent to
         // drag events. probably some bug in either my implementation or qml
@@ -85,6 +101,7 @@ Rectangle {
         Item {
             id: itemCont
             anchors.fill: parent
+            clip: true
         }
 
         onClicked: panel.clicked(mouse)
@@ -109,21 +126,16 @@ Rectangle {
     }
 
     Rectangle {
-        // drag element on the border
-        anchors.horizontalCenter: panel.horizontalCenter
-        anchors.verticalCenter: (panel.mode === panelModes.bottom) ? panel.top : panel.bottom
-        color: Qt.rgba((_bg.r+_fg.r)/2,
-                       (_bg.g+_fg.g)/2,
-                       (_bg.b+_fg.b)/2,
-                       (_bg.a+_fg.a)/2)
-        height: styler.themePaddingSmall * 2
-        opacity: 0.75
+        // drag handle at the edge of the card
+        anchors.horizontalCenter: card.horizontalCenter
+        color: styler.itemFg
+        height: Math.max(3, Math.round(styler.themePaddingSmall))
+        opacity: 0.2
         radius: height / 2
         visible: contentHeight > 0
-        width: styler.themePaddingLarge * 5
-
-        property color _bg: styler.blockBg
-        property color _fg: styler.themePrimaryColor
+        width: styler.themePaddingLarge * 3
+        y: panel.mode === panelModes.bottom ? card.y + styler.themePaddingMedium :
+                                              card.y + card.height - styler.themePaddingMedium - height
     }
 
     Connections {
@@ -151,9 +163,9 @@ Rectangle {
     function _showPanel(animate) {
         if (!contentHeight || _hiding) return;
         panel._hiding = false;
-        panel.height = contentHeight;
+        panel.height = contentHeight + _margin;
         if (_offset > 0) noAnimation = !animate;
-        _offset = panel.contentHeight;
+        _offset = panel.height;
         noAnimation = false;
     }
 }

@@ -26,21 +26,9 @@ MouseArea {
 
     anchors.right: parent.right
     enabled: openMenu
-    height: openMenu ? parent.height : button.height
-    width: openMenu ? parent.width : button.width
-    y: {
-        if (openMenu) return 0;
-        // navigation or follow me
-        if (app.mode === modes.navigate || app.mode === modes.followMe || app.mode === modes.navigatePost) {
-            if (!app.portrait)
-                return northArrow.y + northArrow.height;
-            return (parent.height - northArrow.height)/2 - height;
-        }
-        // (app.mode === modes.explore || app.mode === modes.exploreRoute)
-        return navigationSign.y + navigationSign.height + meters.anchors.topMargin +
-                meters.height + styler.themePaddingLarge;
-
-    }
+    height: openMenu ? parent.height : 0
+    width: openMenu ? parent.width : 0
+    y: 0
     z: openMenu ? 9999 : 500
 
     states: [
@@ -69,16 +57,8 @@ MouseArea {
     property bool _hide: (app.modalDialog && !app.modalDialogBasemap) || app.infoPanelOpen || (map.cleanMode && !app.conf.mapModeCleanShowBasemap)
     property bool _noanim: false
 
-    MapButton {
-        id: button
-        iconHeight: styler.themeIconSizeSmall
-        iconSource: app.getIcon("icons/map-layers")
-        visible: !openMenu
-        onClicked: {
-            master.fillMenu();
-            openMenu = true;
-        }
-    }
+
+    CardShadow { target: menu }
 
     Rectangle {
         id: menu
@@ -86,9 +66,7 @@ MouseArea {
         anchors.rightMargin: styler.themePaddingLarge
         color: styler.itemBg
         height: flick.height + 2*styler.themePaddingLarge
-        layer.enabled: true
-        layer.effect: ShadowPL { }
-        radius: styler.radius
+        radius: styler.cardRadius
         visible: openMenu
         width: flick.width + 2*styler.themePaddingLarge
         y: styler.themePaddingLarge
@@ -486,6 +464,11 @@ MouseArea {
             master.visible = false;
         }
         openMenu = false;
+    }
+
+    function open() {
+        master.fillMenu();
+        openMenu = true;
     }
 
     function fillMenu() {

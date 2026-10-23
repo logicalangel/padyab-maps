@@ -20,9 +20,9 @@ import QtQuick 2.0
 import pm.platform 1.0
 import pm 1.0
 
-// Floating card at the bottom of the screen when a route is shown but
-// navigation is not running: the found routes with their time and
-// distance, a button to start navigation and buttons to edit or clear
+// Floating sheet at the bottom of the screen when a route is shown but
+// navigation is not running: origin and destination, the found routes
+// with their time and distance, and a button to start navigation
 Item {
     id: sheet
     anchors.bottom: parent.bottom
@@ -38,6 +38,17 @@ Item {
     property real   marginExtraLeftSide: app.portrait ? 1 : width
     property real   marginExtraRight: app.portrait ? 0 : -height
     property real   marginExtraRightSide: 1
+    property string origin: {
+        var loc = app.navigator.locations;
+        if (!loc || loc.length < 2) return "";
+        return loc[0].text || "";
+    }
+    property string destination: {
+        var loc = app.navigator.locations;
+        if (!loc || loc.length < 2) return "";
+        return loc[loc.length - 1].text || "";
+    }
+    property real   padding: styler.themePaddingLarge
     property var    routes: {
         var alternatives = app.navigator.alternatives;
         if (alternatives.length > 1) {
@@ -49,78 +60,67 @@ Item {
                 // compare rounded minutes, as shown to the user
                 var extra = Math.round(s.duration / 60) - Math.round(fastest / 60);
                 return {"index": i, "time": s.time, "dist": s.dist, "via": s.via,
-                        "extra": extra > 0 ? app.tr("+%1 min").arg(extra) : ""};
+                        "eta": sheet.eta(s.duration),
+                        "extra": extra > 0 ? app.tr("%1 min slower").arg(extra) : ""};
             });
         }
         // single route, possibly partly driven already
         var started = app.navigator.progress > 0 && app.navigator.destTime;
+        var summary = app.navigator.summary;
         return [{"index": 0,
                  "time": started ? app.navigator.destTime : app.navigator.totalTime,
                  "dist": started ? app.navigator.destDist : app.navigator.totalDist,
-                 "via": app.navigator.summary.via || "",
+                 "via": summary.via || "",
+                 "eta": started ? app.navigator.destEta : sheet.eta(summary.duration),
                  "extra": ""}];
     }
-    property string destination: {
-        var loc = app.navigator.locations;
-        if (!loc || loc.length < 2) return "";
-        return loc[loc.length - 1].text || "";
-    }
+
+    CardShadow { target: card }
 
     Rectangle {
         id: card
         anchors.bottom: parent.bottom
         anchors.bottomMargin: styler.themePaddingMedium
-        color: styler.itemBg
-        height: column.height + styler.themePaddingLarge + styler.themePaddingMedium
-        layer.enabled: true
-        layer.effect: ShadowPL { }
-        radius: styler.cardRadius
+        color: styler.sheetBg
+        height: column.height + 2*sheet.padding
+        radius: styler.cardRadius * 1.4
         width: parent.width - (app.portrait ? 2 : 1)*x
         x: styler.themePaddingMedium
 
         Column {
             id: column
             anchors.left: parent.left
+            anchors.leftMargin: sheet.padding
             anchors.right: parent.right
+            anchors.rightMargin: sheet.padding
             anchors.top: parent.top
-            anchors.topMargin: styler.themePaddingLarge
+            anchors.topMargin: sheet.padding
+            spacing: sheet.padding
 
             Item {
-                // header: destination with edit and close buttons
+                // header with close button
                 height: Math.max(title.height, closeButton.height)
                 width: parent.width
 
                 LabelPL {
                     id: title
                     anchors.left: parent.left
-                    anchors.leftMargin: styler.themePaddingLarge
-                    anchors.right: editButton.left
+                    anchors.right: closeButton.left
                     anchors.rightMargin: styler.themePaddingMedium
                     anchors.verticalCenter: parent.verticalCenter
                     color: styler.itemFg
                     font.bold: true
-                    font.pixelSize: styler.themeFontSizeLarge
-                    text: sheet.destination ? app.tr("To %1").arg(sheet.destination) : app.tr("Route")
+                    font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+                    text: app.tr("Directions")
                     truncMode: truncModes.fade
-                }
-
-                CardButton {
-                    id: editButton
-                    anchors.right: closeButton.left
-                    anchors.rightMargin: styler.themePaddingMedium
-                    anchors.verticalCenter: parent.verticalCenter
-                    iconName: styler.iconEdit
-                    size: closeButton.size
-                    onClicked: app.pushMain(Qt.resolvedUrl("RoutePage.qml"))
                 }
 
                 CardButton {
                     id: closeButton
                     anchors.right: parent.right
-                    anchors.rightMargin: styler.themePaddingLarge
                     anchors.verticalCenter: parent.verticalCenter
-                    iconName: styler.iconClose
-                    size: Math.round(styler.themeIconSizeSmall)
+                    cross: true
+                    size: Math.round(styler.themeIconSizeSmall * 1.2)
                     onClicked: {
                         notification.flash(app.tr("Route removed"), "navigationClear");
                         app.navigator.clearRoute();
@@ -128,31 +128,86 @@ Item {
                 }
             }
 
-            Item {
-                height: styler.themePaddingMedium
+            Rectangle {
+                // origin and destination, tap to edit the route
+                color: placesMouse.pressed ? styler.itemPressed : styler.itemBg
+                height: places.height
+                radius: styler.cardRadius
+                visible: sheet.destination ? true : false
                 width: parent.width
+
+                Column {
+                    id: places
+                    width: parent.width
+
+                    Repeater {
+                        model: [
+                            {"text": sheet.origin || app.tr("Current position"), "color": styler.route},
+                            {"text": sheet.destination, "color": styler.endBg}
+                        ]
+
+                        Item {
+                            height: placeLabel.height + 2*styler.themePaddingLarge
+                            width: places.width
+
+                            Rectangle {
+                                id: dot
+                                anchors.left: parent.left
+                                anchors.leftMargin: styler.themePaddingLarge
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: modelData.color
+                                height: Math.round(styler.themeFontSizeMedium * 0.9)
+                                radius: height / 2
+                                width: height
+                            }
+
+                            LabelPL {
+                                id: placeLabel
+                                anchors.left: dot.right
+                                anchors.leftMargin: styler.themePaddingLarge
+                                anchors.right: parent.right
+                                anchors.rightMargin: styler.themePaddingLarge
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: styler.itemFg
+                                font.pixelSize: styler.themeFontSizeLarge
+                                text: modelData.text
+                                truncMode: truncModes.fade
+                            }
+
+                            Rectangle {
+                                // divider between the two places
+                                anchors.bottom: parent.bottom
+                                anchors.left: placeLabel.left
+                                anchors.right: parent.right
+                                color: styler.itemFg
+                                height: 1
+                                opacity: 0.1
+                                visible: index === 0
+                            }
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: placesMouse
+                    anchors.fill: parent
+                    onClicked: app.pushMain(Qt.resolvedUrl("RoutePage.qml"))
+                }
             }
 
             Repeater {
                 model: sheet.routes
 
-                Item {
+                Rectangle {
                     // one route: tap to select it, tap the selected one for details
-                    height: row.height + 2*styler.themePaddingMedium
+                    border.color: styler.route
+                    border.width: selected && sheet.routes.length > 1 ? Math.max(2, Math.round(styler.themePaddingSmall / 2)) : 0
+                    color: rowMouse.pressed ? styler.itemPressed : styler.itemBg
+                    height: Math.max(texts.height, goButton.height) + 2*styler.themePaddingLarge
+                    radius: styler.cardRadius
                     width: column.width
 
                     property bool selected: modelData.index === app.navigator.alternativeSelected
-
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.leftMargin: styler.themePaddingMedium
-                        anchors.rightMargin: styler.themePaddingMedium
-                        color: Qt.rgba(_route.r, _route.g, _route.b, rowMouse.pressed ? 0.2 : 0.1)
-                        radius: styler.cardRadius - styler.themePaddingMedium
-                        visible: parent.selected && sheet.routes.length > 1 || rowMouse.pressed
-
-                        property color _route: styler.route
-                    }
 
                     MouseArea {
                         id: rowMouse
@@ -163,90 +218,91 @@ Item {
                         }
                     }
 
-                    Item {
-                        id: row
+                    Column {
+                        id: texts
                         anchors.left: parent.left
                         anchors.leftMargin: styler.themePaddingLarge
+                        anchors.right: goButton.left
+                        anchors.rightMargin: styler.themePaddingLarge
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        LabelPL {
+                            color: styler.itemFg
+                            font.bold: true
+                            font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.1)
+                            text: modelData.time || ""
+                        }
+
+                        LabelPL {
+                            color: styler.itemFg
+                            font.pixelSize: styler.themeFontSizeMedium
+                            opacity: 0.6
+                            text: {
+                                var parts = [];
+                                if (modelData.eta) parts.push(app.tr("%1 arrival").arg(modelData.eta));
+                                if (modelData.dist) parts.push(modelData.dist);
+                                return parts.join(" · ");
+                            }
+                            truncMode: truncModes.fade
+                            width: parent.width
+                        }
+
+                        LabelPL {
+                            color: styler.itemFg
+                            font.pixelSize: styler.themeFontSizeMedium
+                            opacity: 0.6
+                            text: {
+                                var parts = [];
+                                if (modelData.via) parts.push(app.tr("via %1").arg(modelData.via));
+                                if (modelData.extra) parts.push(modelData.extra);
+                                return parts.join(" · ");
+                            }
+                            truncMode: truncModes.fade
+                            visible: text
+                            width: parent.width
+                        }
+                    }
+
+                    Rectangle {
+                        // starts navigation along this route
+                        id: goButton
                         anchors.right: parent.right
                         anchors.rightMargin: styler.themePaddingLarge
                         anchors.verticalCenter: parent.verticalCenter
-                        height: Math.max(texts.height, goButton.height)
+                        color: goMouse.pressed ? Qt.darker(styler.goBg, 1.2) : styler.goBg
+                        height: Math.round(styler.themeIconSizeSmall * 2)
+                        radius: styler.cardRadius * 0.75
+                        width: Math.max(goLabel.width + 2*styler.themePaddingLarge, Math.round(height * 1.2))
 
-                        Column {
-                            id: texts
-                            anchors.left: parent.left
-                            anchors.right: goButton.left
-                            anchors.rightMargin: styler.themePaddingLarge
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            Row {
-                                spacing: styler.themePaddingMedium
-
-                                LabelPL {
-                                    id: timeLabel
-                                    color: styler.itemFg
-                                    font.bold: true
-                                    font.pixelSize: styler.themeFontSizeExtraLarge
-                                    text: modelData.time || ""
-                                }
-
-                                LabelPL {
-                                    anchors.baseline: timeLabel.baseline
-                                    color: styler.itemFg
-                                    font.pixelSize: styler.themeFontSizeMedium
-                                    opacity: 0.6
-                                    text: modelData.extra
-                                    visible: text
-                                }
-                            }
-
-                            LabelPL {
-                                color: styler.itemFg
-                                font.pixelSize: styler.themeFontSizeMedium
-                                opacity: 0.6
-                                text: {
-                                    var parts = [];
-                                    if (modelData.dist) parts.push(modelData.dist);
-                                    if (modelData.via) parts.push(app.tr("via %1").arg(modelData.via));
-                                    return parts.join(" · ");
-                                }
-                                truncMode: truncModes.fade
-                                width: parent.width
-                            }
+                        LabelPL {
+                            id: goLabel
+                            anchors.centerIn: parent
+                            color: "white"
+                            font.bold: true
+                            font.capitalization: Font.AllUppercase
+                            font.pixelSize: Math.round(styler.themeFontSizeLarge * 1.2)
+                            text: app.tr("Go")
                         }
 
-                        Rectangle {
-                            // starts navigation along this route
-                            id: goButton
-                            anchors.right: parent.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: goMouse.pressed ? Qt.darker(styler.goBg, 1.2) : styler.goBg
-                            height: goLabel.height + 2*styler.themePaddingMedium
-                            radius: height / 2
-                            width: Math.max(goLabel.width + 3*styler.themePaddingLarge, 2*height)
-
-                            LabelPL {
-                                id: goLabel
-                                anchors.centerIn: parent
-                                color: "white"
-                                font.bold: true
-                                font.pixelSize: styler.themeFontSizeLarge
-                                text: app.tr("Go")
-                            }
-
-                            MouseArea {
-                                id: goMouse
-                                anchors.fill: parent
-                                onClicked: {
-                                    app.navigator.selectAlternative(modelData.index);
-                                    notification.flash(app.tr("Navigation started"), "navigationStartPause");
-                                    app.navigator.running = true;
-                                }
+                        MouseArea {
+                            id: goMouse
+                            anchors.fill: parent
+                            onClicked: {
+                                app.navigator.selectAlternative(modelData.index);
+                                notification.flash(app.tr("Navigation started"), "navigationStartPause");
+                                app.navigator.running = true;
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    function eta(duration) {
+        // arrival time when starting now
+        if (!duration) return "";
+        return Qt.formatTime(new Date(Date.now() + duration*1000),
+                             Qt.locale().timeFormat(Locale.ShortFormat));
     }
 }

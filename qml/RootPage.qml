@@ -28,30 +28,25 @@ PageEmptyPL {
 
     AttributionButton { id: attributionButton }
     BasemapButton { id: basemapButton }
-    CenterButton { id: centerButton }
     Compass { id: compass }
-    GeocodeButton { id: geocodeButton }
     Map {
         id: map
         accessToken: py.evaluate("poor.key.mapbox_key")
     }
-    MenuButton { id: menuButton }
-    Meters { id: meters }
-    NavigateButton { id: navigateButton }
+    MapControls { id: mapControls }
     NavigationButtonStartPause { id: navigationButtonStartPause }
     NavigationBanner { id: navigationCurrent }
     NavigationSign { id: navigationSign }
-    NavigationSpeedBadge { id: speedBadge }
     NavigationSpeedBlock { id: navigationSpeed }
     NavigationTray { id: navigationTray }
     Navigator { id: navigator }
-    NorthArrow { id: northArrow }
     Notification { id: notification }
     InfoPanel { id: infoPanel }
     Poi { id: pois }
     RemorsePopupPL { id: remorse; z: 1000 }
     RouteSheet { id: routeSheet }
     ScaleBar { id: scaleBar }
+    SearchSheet { id: searchSheet }
     SpeedLimit { id: speedLimit }
     StreetName { id: streetName }
     ZoomLevel { id: zoomLevel }
@@ -107,6 +102,7 @@ PageEmptyPL {
     property var _itemBottom: {
         if (navigationTray.visible) return navigationTray;
         if (routeSheet.visible) return routeSheet;
+        if (searchSheet.visible) return searchSheet;
         return undefined;
     }
     property var _itemTop: navigationCurrent.visible ? navigationCurrent : undefined

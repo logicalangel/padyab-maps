@@ -278,11 +278,6 @@ MapboxMap {
     }
 
     Connections {
-        target: menuButton
-        onHeightChanged: map.updateMargins();
-    }
-
-    Connections {
         target: app.navigator
         onRouteChanged: {
             updateRoute();
@@ -704,8 +699,7 @@ MapboxMap {
         // Calculate new margins and set them for the map.
         if (map.height <= 0) return;
         var header = referenceBlockTop.height > 0 ? referenceBlockTop.height : map.height*0.05;
-        var footer = !app.infoPanelOpen && app.mode === modes.explore && menuButton ? menuButton.height + menuButton.anchors.bottomMargin : 0;
-        footer += !app.infoPanelOpen && (app.mode === modes.navigate || app.mode === modes.navigatePost || app.mode === modes.followMe || app.mode === modes.exploreRoute) && referenceBlockBottom ? referenceBlockBottom.height : 0;
+        var footer = !app.infoPanelOpen && referenceBlockBottom ? referenceBlockBottom.height : 0;
         footer += !app.infoPanelOpen && (app.mode === modes.navigate || app.mode === modes.navigatePost || app.mode === modes.followMe) && streetName ? streetName.height : 0
         footer += app.infoPanelOpen && infoPanel ? infoPanel.height : 0
         footer = Math.min(footer, map.height / 2.0);

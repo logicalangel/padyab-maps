@@ -27,8 +27,9 @@ Rectangle {
     radius: size / 2
     width: size
 
+    property bool  cross: false
     property alias iconName: icon.iconName
-    property real  size: Math.round(styler.themeIconSizeSmall * 1.3)
+    property real  size: Math.round(styler.themeIconSizeSmall * 1.6)
 
     property color _fg: styler.itemFg
 
@@ -38,6 +39,21 @@ Rectangle {
         id: icon
         anchors.centerIn: parent
         iconHeight: Math.round(button.size * 0.5)
+        visible: !button.cross
+    }
+
+    Repeater {
+        // cross drawn with two bars, used for close buttons
+        model: button.cross ? 2 : 0
+        Rectangle {
+            anchors.centerIn: parent
+            color: styler.itemFg
+            height: Math.max(2, Math.round(button.size * 0.07))
+            opacity: 0.6
+            radius: height / 2
+            rotation: index === 0 ? 45 : -45
+            width: button.size * 0.38
+        }
     }
 
     MouseArea {

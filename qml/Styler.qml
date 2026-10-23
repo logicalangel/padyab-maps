@@ -55,6 +55,11 @@ StylerPL {
     property string route                // route color on the map. also used for maneuver markers
     property real   routeOpacity         // opacity of route
     property string shadowColor          // shadow color used on map buttons and panels
+    // sheetBg should never be specified in style nor defaults
+    property color  sheetBg: Qt.rgba(_itemColBg.r*0.95 + _itemColFg.r*0.05,
+                                     _itemColBg.g*0.95 + _itemColFg.g*0.05,
+                                     _itemColBg.b*0.95 + _itemColFg.b*0.05,
+                                     _itemColBg.a)
 
     // private properties
     property color  _itemColBg: itemBg

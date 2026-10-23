@@ -49,6 +49,8 @@ Item {
 
     property bool   _pressed: mouse.pressed
 
+    CardShadow { target: thenCard }
+
     Rectangle {
         // the maneuver after the next one, tucked under the main card
         id: thenCard
@@ -57,8 +59,6 @@ Item {
         anchors.topMargin: -styler.cardRadius
         color: _pressed ? Qt.lighter(styler.bannerBg, 1.8) : Qt.lighter(styler.bannerBg, 1.4)
         height: styler.cardRadius + thenRow.height + 2*styler.themePaddingMedium
-        layer.enabled: true
-        layer.effect: ShadowPL { }
         radius: styler.cardRadius
         visible: block.notify && block.nextIcon ? true : false
         width: thenRow.width + 2*styler.themePaddingLarge
@@ -99,12 +99,12 @@ Item {
         }
     }
 
+    CardShadow { target: card }
+
     Rectangle {
         id: card
         color: _pressed ? Qt.lighter(styler.bannerBg, 1.4) : styler.bannerBg
         height: Math.max(iconImage.height, textColumn.height) + 2*styler.themePaddingLarge
-        layer.enabled: true
-        layer.effect: ShadowPL { }
         radius: styler.cardRadius
         width: app.portrait ? parent.width - 2*x : Math.round(parent.width * 0.42)
         x: styler.themePaddingMedium

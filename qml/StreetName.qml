@@ -21,9 +21,7 @@ import pm.platform 1.0
 
 Rectangle {
     id: master
-    anchors.bottom: referenceBlockBottom.y > menuButton.y && menuButton.visible ?
-                    menuButton.top :
-                    referenceBlockBottom.top
+    anchors.bottom: referenceBlockBottom.top
     anchors.bottomMargin: styler.themePaddingSmall
     anchors.horizontalCenter: parent.horizontalCenter
     color: "transparent"
@@ -34,8 +32,7 @@ Rectangle {
 
     property int maxWidth: parent.width - 2*_x
     property int _x: {
-        var speed = Math.max(speedLimit.visible ? speedLimit.x + speedLimit.width : 0,
-                             speedBadge.visible ? speedBadge.x + speedBadge.width : 0);
+        var speed = speedLimit.visible ? speedLimit.x + speedLimit.width : 0;
         var left = Math.max(speed, referenceBlockBottomLeft.width);
         var right = referenceBlockBottomRight.width;
         return Math.max(left, right) + styler.themePaddingLarge

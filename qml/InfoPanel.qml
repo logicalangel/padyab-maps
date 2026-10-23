@@ -49,7 +49,7 @@ Panel {
         height: Math.min(contentHeight,
                          map.height - anchors.topMargin -
                          (infoText ? infoBg.height : styler.themePaddingLarge))
-        width: panel.width
+        width: parent.width
         PoiBlock {
             id: poiBlock
             anchors.top: parent.top

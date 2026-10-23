@@ -71,15 +71,35 @@ Column {
         "origin": true
     }
 
-    ListItemLabel {
-        // title
-        color: styler.themeHighlightColor
-        font.pixelSize: styler.themeFontSizeLarge
-        height: text ? implicitHeight + styler.themePaddingMedium: 0
-        text: item.title
-        truncMode: truncModes.none
-        verticalAlignment: Text.AlignTop
-        wrapMode: Text.WordWrap
+    Item {
+        // title with a close button
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: Math.max(titleLabel.height, closeButton.height) + styler.themePaddingMedium
+
+        LabelPL {
+            id: titleLabel
+            anchors.left: parent.left
+            anchors.leftMargin: styler.themeHorizontalPageMargin
+            anchors.right: closeButton.left
+            anchors.rightMargin: styler.themePaddingMedium
+            anchors.top: parent.top
+            color: styler.itemFg
+            font.bold: true
+            font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.1)
+            text: item.title
+            wrapMode: Text.WordWrap
+        }
+
+        CardButton {
+            id: closeButton
+            anchors.right: parent.right
+            anchors.rightMargin: styler.themeHorizontalPageMargin
+            anchors.top: parent.top
+            cross: true
+            size: Math.round(styler.themeIconSizeSmall * 1.2)
+            onClicked: app.infoPanel.hidePoi()
+        }
     }
 
     Column {
@@ -89,9 +109,10 @@ Column {
         visible: _fullMode
 
         ListItemLabel {
-            color: styler.themeHighlightColor
+            color: styler.itemFg
             height: text ? implicitHeight + styler.themePaddingSmall: 0
-            font.pixelSize: styler.themeFontSizeSmall
+            font.pixelSize: styler.themeFontSizeMedium
+            opacity: 0.7
             text: {
                 if (item.poiType && item.address)
                     return app.tr("%1; %2", item.poiType, item.address);
@@ -107,9 +128,10 @@ Column {
         }
 
         ListItemLabel {
-            color: styler.themeSecondaryHighlightColor
+            color: styler.itemFg
             font.pixelSize: styler.themeFontSizeSmall
             height: text ? implicitHeight + styler.themePaddingSmall: 0
+            opacity: 0.5
             text: app.portrait && item.coordinate? app.tr("Latitude: %1; Longitude: %2", item.coordinate.latitude, item.coordinate.longitude) : ""
             truncMode: truncModes.fade
             verticalAlignment: Text.AlignTop
@@ -117,7 +139,7 @@ Column {
 
         ListItemLabel {
             id: textItem
-            color: styler.themeHighlightColor
+            color: styler.itemFg
             font.pixelSize: styler.themeFontSizeSmall
             height: text ? implicitHeight + styler.themePaddingSmall: 0
             maximumLineCount: app.portrait ? 3 : 1;
@@ -155,61 +177,50 @@ Column {
     }
 
     Row {
+        // actions: directions as the main one, then save, nearby, details and remove
         id: buttonRow
-        anchors.horizontalCenter: parent.horizontalCenter
-        spacing: styler.themePaddingLarge * factor
+        anchors.left: parent.left
+        anchors.leftMargin: styler.themeHorizontalPageMargin
+        anchors.right: parent.right
+        anchors.rightMargin: styler.themeHorizontalPageMargin
+        spacing: styler.themePaddingMedium
         visible: !navigationControls
 
-        property real factor: {
-            // Return condition is a workaround for
-            // https://gitlab.com/ubports/development/core/lomiri-ui-toolkit/-/issues/28
-            if (item.width == 0) return 1.0;
+        property real tileWidth: Math.round((width - 5*spacing) / 6)
 
-            // Assuming that icon width equals to height
-            var l = children.length
-            var w = item.width - styler.themeHorizontalPageMargin*2;
-            var req = (l-1)*styler.themePaddingLarge +
-                    l*(1+firstButton.padding)*styler.themeIconSizeMedium;
-            if (w > req) return 1.0;
-            if (w < req/4) return 1.0/4.0;
-            return w / req;
-        }
-        property int iconHeight: styler.themeIconSizeMedium * factor
-
-        IconButtonPL {
-            id: firstButton
-            iconHeight: buttonRow.iconHeight
-            iconName: styler.iconAbout
+        ActionTile {
+            label: app.tr("Directions")
+            primary: true
+            width: 2*buttonRow.tileWidth + buttonRow.spacing
             onClicked: {
-                app.push(Qt.resolvedUrl("PoiInfoPage.qml"), {
-                             "active": active,
-                             "poi": item.poi,
-                         });
+                if (coordinate === undefined) return;
+                // with a route already planned, ask how to use this place
+                if (navigator.hasDestination || navigator.hasOrigin) {
+                    navigationControls = true;
+                    return;
+                }
+                var loc = navigator.locations;
+                loc.push(poiAsRoutingDestination);
+                navigator.locations = loc;
+                finalizeRouting();
             }
         }
 
-        IconButtonPL {
+        ActionTile {
             enabled: item.active
-            iconHeight: buttonRow.iconHeight
             iconName: bookmarked ? styler.iconFavoriteSelected  : styler.iconFavorite
+            label: bookmarked ? app.tr("Saved") : app.tr("Save")
+            width: buttonRow.tileWidth
             onClicked: {
                 bookmarked = !bookmarked;
                 pois.bookmark(poiId, bookmarked);
             }
         }
 
-        IconButtonPL {
-            iconHeight: buttonRow.iconHeight
-            iconName: styler.iconNavigate
-            onClicked: {
-                if (coordinate === undefined) return;
-                navigationControls = true;
-            }
-        }
-
-        IconButtonPL {
-            iconHeight: buttonRow.iconHeight
+        ActionTile {
             iconName: styler.iconNearby
+            label: app.tr("Nearby")
+            width: buttonRow.tileWidth
             onClicked: {
                 if (coordinate === undefined) return;
                 app.showMenu(Qt.resolvedUrl("NearbyPage.qml"), {
@@ -219,17 +230,29 @@ Column {
             }
         }
 
-        IconButtonPL {
+        ActionTile {
+            iconName: styler.iconAbout
+            label: app.tr("Details")
+            width: buttonRow.tileWidth
+            onClicked: {
+                app.push(Qt.resolvedUrl("PoiInfoPage.qml"), {
+                             "active": active,
+                             "poi": item.poi,
+                         });
+            }
+        }
+
+        ActionTile {
             enabled: item.active
-            iconHeight: buttonRow.iconHeight
             iconName: styler.iconDelete
+            label: app.tr("Remove")
+            width: buttonRow.tileWidth
             onClicked: {
                 if (coordinate === undefined) return;
                 pois.remove(poiId, true);
                 hide();
             }
         }
-
     }
 
     // Navigation controls
