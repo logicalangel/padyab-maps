@@ -176,7 +176,7 @@ Item {
             anchors.right: menuButton.left
             anchors.rightMargin: styler.themePaddingMedium
             anchors.top: field.top
-            iconName: styler.iconNavigate
+            iconSource: app.getIcon("icons/route")
             visible: !sheet.expanded
             onClicked: app.pushMain(Qt.resolvedUrl("RoutePage.qml"))
         }
@@ -186,9 +186,9 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: styler.themePaddingLarge
             anchors.top: field.top
-            iconName: styler.iconMenu
+            iconSource: app.getIcon("icons/menu")
             visible: !sheet.expanded
-            onClicked: app.showMenu()
+            onClicked: menuSheet.open()
         }
 
         LabelPL {

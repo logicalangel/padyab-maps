@@ -24,17 +24,22 @@ import pm 1.0
 Rectangle {
     id: block
     anchors.top: parent.top
-    anchors.topMargin: -radius
+    anchors.topMargin: styler.themePaddingMedium
     anchors.right: parent.right
-    anchors.rightMargin: -radius
-    color: mouse.pressed ? styler.blockPressed : styler.blockBg
+    anchors.rightMargin: styler.themePaddingMedium
+    color: mouse.pressed ? styler.itemPressed : styler.itemBg
     height: speed.height + styler.themePaddingMedium
-    radius: styler.radius
+    radius: styler.cardRadius
     visible: !app.modalDialog && (app.mode === modes.followMe || app.mode === modes.navigatePost) && speed.text
-    width: speed.width + styler.themePaddingLarge +
-           speedUnit.width + styler.themePaddingSmall +
-           styler.themeHorizontalPageMargin + radius
+    width: speed.width + speedUnit.width + styler.themePaddingSmall +
+           2*styler.themePaddingLarge
     z: 400
+
+    CardShadow {
+        // drawn below the block
+        target: block
+        z: -1
+    }
 
     MouseArea {
         id: mouse
@@ -53,9 +58,10 @@ Rectangle {
         anchors.right: speedUnit.left
         anchors.rightMargin: styler.themePaddingSmall
         anchors.top: parent.top
-        color: styler.themePrimaryColor
+        color: styler.itemFg
+        font.bold: true
         font.pixelSize: styler.themeFontSizeHuge
-        height: implicitHeight + styler.themePaddingMedium - parent.anchors.rightMargin
+        height: implicitHeight + styler.themePaddingMedium
         text: {
             if (!gps.speedValid)
                 return "";
@@ -74,8 +80,9 @@ Rectangle {
         id: speedUnit
         anchors.baseline: speed.baseline
         anchors.right: parent.right
-        anchors.rightMargin: styler.themeHorizontalPageMargin - block.anchors.rightMargin
-        color: styler.themeSecondaryColor
+        anchors.rightMargin: styler.themePaddingLarge
+        color: styler.itemFg
+        opacity: 0.6
         font.pixelSize: styler.themeFontSizeMedium
         text: {
             if (app.conf.units === "american") return app.tr("mph");

@@ -28,7 +28,7 @@ Item {
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     height: visible ? card.height + styler.themePaddingMedium : 0
-    visible: !app.modalDialog && app.mode === modes.navigate
+    visible: !app.modalDialog && (app.mode === modes.navigate || app.mode === modes.navigatePost)
     width: app.portrait ? parent.width : Math.round(parent.width * 0.42) + styler.themePaddingMedium
     z: 400
 
@@ -41,6 +41,7 @@ Item {
     property real   marginExtraLeftSide: app.portrait ? 1 : width
     property real   marginExtraRight: app.portrait ? 0 : -height
     property real   marginExtraRightSide: 1
+    property bool   arrived: app.mode === modes.navigatePost
     property bool   showNextLocation: app.navigator.hasNextLocation
     property real   textScale: app.conf.navigationInfoScale
 
@@ -113,7 +114,12 @@ Item {
                 font.bold: true
                 font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * tray.textScale)
                 horizontalAlignment: Text.AlignHCenter
-                text: tray.destTime
+                text: {
+                    if (tray.arrived) return app.tr("Arrived");
+                    // no remaining time is given below a minute
+                    if (!tray.destTime && tray.destDist && tray.destDist !== "-") return app.tr("< 1 min");
+                    return tray.destTime;
+                }
                 truncMode: truncModes.fade
                 width: parent.width
             }
@@ -125,6 +131,10 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 opacity: 0.6
                 text: {
+                    if (tray.arrived) {
+                        var loc = app.navigator.locations;
+                        return loc && loc.length > 0 ? loc[loc.length - 1].text || "" : "";
+                    }
                     var parts = [];
                     if (tray.showNextLocation && !app.navigator.nextLocationDestination)
                         parts.push(app.tr("to waypoint"));
@@ -144,7 +154,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: styler.themePaddingLarge
             anchors.verticalCenter: parent.verticalCenter
-            iconName: styler.iconManeuvers
+            iconSource: app.getIcon("icons/ui/list")
             onClicked: app.showNavigationPages()
         }
     }

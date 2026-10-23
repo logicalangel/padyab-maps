@@ -44,7 +44,7 @@ MapButton {
     transitions: Transition {
         AnchorAnimation { duration: app.conf.animationDuration; }
     }
-    visible: app.mode === modes.navigatePost || app.mode === modes.followMe
+    visible: app.mode === modes.followMe
     y: {
         var needed = height;
         var p = parent.height/2 - needed/2;

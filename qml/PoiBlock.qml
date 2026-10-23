@@ -208,7 +208,7 @@ Column {
 
         ActionTile {
             enabled: item.active
-            iconName: bookmarked ? styler.iconFavoriteSelected  : styler.iconFavorite
+            iconSource: app.getIcon(bookmarked ? "icons/ui/bookmark-filled" : "icons/ui/bookmark")
             label: bookmarked ? app.tr("Saved") : app.tr("Save")
             width: buttonRow.tileWidth
             onClicked: {
@@ -218,7 +218,7 @@ Column {
         }
 
         ActionTile {
-            iconName: styler.iconNearby
+            iconSource: app.getIcon("icons/ui/pin")
             label: app.tr("Nearby")
             width: buttonRow.tileWidth
             onClicked: {
@@ -231,7 +231,7 @@ Column {
         }
 
         ActionTile {
-            iconName: styler.iconAbout
+            iconSource: app.getIcon("icons/ui/info")
             label: app.tr("Details")
             width: buttonRow.tileWidth
             onClicked: {
@@ -244,7 +244,7 @@ Column {
 
         ActionTile {
             enabled: item.active
-            iconName: styler.iconDelete
+            iconSource: app.getIcon("icons/ui/trash")
             label: app.tr("Remove")
             width: buttonRow.tileWidth
             onClicked: {

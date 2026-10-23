@@ -29,6 +29,7 @@ Rectangle {
 
     property bool  cross: false
     property alias iconName: icon.iconName
+    property alias iconSource: icon.iconSource // own icon with a white variant, preferred over iconName
     property real  size: Math.round(styler.themeIconSizeSmall * 1.6)
 
     property color _fg: styler.itemFg
@@ -38,6 +39,7 @@ Rectangle {
     IconPL {
         id: icon
         anchors.centerIn: parent
+        iconColorize: !iconSource
         iconHeight: Math.round(button.size * 0.5)
         visible: !button.cross
     }

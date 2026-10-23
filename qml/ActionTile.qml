@@ -25,13 +25,15 @@ Rectangle {
     id: tile
     color: {
         if (primary) return mouse.pressed ? Qt.darker(styler.route, 1.2) : styler.route;
-        return mouse.pressed ? styler.itemPressed : styler.sheetBg;
+        return mouse.pressed ? styler.itemPressed : baseColor;
     }
     height: Math.round(styler.themeIconSizeSmall * 2)
     opacity: enabled ? 1 : 0.5
     radius: styler.cardRadius * 0.75
 
+    property color baseColor: styler.sheetBg
     property alias iconName: icon.iconName
+    property alias iconSource: icon.iconSource // own icon with a white variant, preferred over iconName
     property alias label: label.text
     property bool  primary: false
 
@@ -44,6 +46,7 @@ Rectangle {
         IconPL {
             id: icon
             anchors.horizontalCenter: parent.horizontalCenter
+            iconColorize: !iconSource
             iconHeight: Math.round(tile.height * 0.36)
             visible: !tile.primary
         }

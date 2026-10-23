@@ -31,49 +31,48 @@ PagePL {
         width: parent.width
 
         Row {
+            // actions as large tiles: start or pause, reroute and clear
             id: row
-            height: Math.max(beginItem.height, rerouteItem.height, clearItem.height)
-            width: parent.width
+            anchors.left: parent.left
+            anchors.leftMargin: styler.themeHorizontalPageMargin
+            anchors.right: parent.right
+            anchors.rightMargin: styler.themeHorizontalPageMargin
+            spacing: styler.themePaddingMedium
 
-            property real contentWidth: width - 2 * styler.themeHorizontalPageMargin
-            property real itemWidth: contentWidth / 3
+            property bool running: app.mode === modes.navigate || app.mode === modes.navigatePost
+            property real tileWidth: (width - 3*spacing) / 4
 
-            ToolItemPL {
-                id: beginItem
-                width: row.itemWidth + styler.themeHorizontalPageMargin
-                icon.iconHeight: styler.themeIconSizeMedium
-                icon.iconName: (app.mode === modes.navigate || app.mode === modes.navigatePost) ? styler.iconPause : styler.iconStart
-                text: (app.mode === modes.navigate || app.mode === modes.navigatePost) ? app.tr("Pause") : app.tr("Navigate")
+            ActionTile {
+                label: row.running ? app.tr("Pause") : app.tr("Navigate")
+                primary: true
+                width: 2*row.tileWidth + row.spacing
                 onClicked: {
                     app.hideNavigationPages();
                     app.navigator.running = !app.navigator.running;
                 }
             }
 
-            ToolItemPL {
-                id: rerouteItem
-                width: row.itemWidth
-                icon.iconHeight: styler.themeIconSizeMedium
-                icon.iconName: styler.iconRefresh
-                text: app.tr("Reroute")
+            ActionTile {
+                baseColor: styler.itemBg
+                iconSource: app.getIcon("icons/ui/refresh")
+                label: app.tr("Reroute")
+                width: row.tileWidth
                 onClicked: {
                     app.navigator.reroute();
                     app.hideNavigationPages();
                 }
             }
 
-            ToolItemPL {
-                id: clearItem
-                width: row.itemWidth + styler.themeHorizontalPageMargin
-                icon.iconHeight: styler.themeIconSizeMedium
-                icon.iconName: styler.iconClear
-                text: app.tr("Clear")
+            ActionTile {
+                baseColor: styler.itemBg
+                iconSource: app.getIcon("icons/ui/trash")
+                label: app.tr("Clear")
+                width: row.tileWidth
                 onClicked: {
                     app.navigator.clearRoute();
                     app.showMap();
                 }
             }
-
         }
 
         Spacer {

@@ -34,6 +34,7 @@ PageEmptyPL {
         accessToken: py.evaluate("poor.key.mapbox_key")
     }
     MapControls { id: mapControls }
+    MenuSheet { id: menuSheet }
     NavigationButtonStartPause { id: navigationButtonStartPause }
     NavigationBanner { id: navigationCurrent }
     NavigationSign { id: navigationSign }
@@ -90,8 +91,8 @@ PageEmptyPL {
         id: referenceBlockTopRight
         anchors.right: parent.right
         anchors.top: parent.top
-        height: navigationSpeed.visible ? navigationSpeed.height : _posTopRight
-        width: navigationSpeed.visible ? navigationSpeed.width :
+        height: navigationSpeed.visible ? navigationSpeed.y + navigationSpeed.height : _posTopRight
+        width: navigationSpeed.visible ? navigationSpeed.width + navigationSpeed.anchors.rightMargin :
                                          (_itemTop ? _itemTop.marginExtraRightSide : 1)
     }
 
@@ -121,7 +122,7 @@ PageEmptyPL {
         app.pois = pois;
         app.remorse = remorse;
         // connect modal dialog properties
-        app.modalDialogBasemap = Qt.binding(function () { return basemapButton.openMenu; });
+        app.modalDialogBasemap = Qt.binding(function () { return basemapButton.openMenu || menuSheet.openMenu; });
     }
 
     onPageStatusActive: {
