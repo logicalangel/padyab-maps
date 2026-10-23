@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import poor.test
+import time
 
 
 class TestModule(poor.test.TestCase):
@@ -32,3 +33,9 @@ class TestModule(poor.test.TestCase):
         assert result.maneuvers
         assert result.x
         assert result.y
+
+    def test_wait_turn(self):
+        start = time.monotonic()
+        self.router._provider.wait_turn()
+        self.router._provider.wait_turn()
+        assert time.monotonic() - start >= 0.99

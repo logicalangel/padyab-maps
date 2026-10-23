@@ -24,6 +24,8 @@ https://valhalla1.openstreetmap.de and https://github.com/valhalla/valhalla
 import copy
 import json
 import poor
+import threading
+import time
 
 CONF_DEFAULTS = {
     "bicycle_type": "Hybrid",
@@ -111,6 +113,12 @@ URL = "https://valhalla1.openstreetmap.de/route"
 URL_OPT = "https://valhalla1.openstreetmap.de/optimized_route"
 cache = {}
 
+# The server's terms of use allow at most one request per second from a
+# client; requests from this device are spaced by at least that much.
+MIN_INTERVAL = 1.0
+_last_request = 0.0
+_request_lock = threading.Lock()
+
 def prepare_endpoint(point):
     """Return `point` as a dictionary ready to be passed on to the router."""
     if isinstance(point, (list, tuple)):
@@ -156,6 +164,7 @@ def route(locations, params):
         url = URL.format(**locals())
     with poor.util.silent(KeyError):
         return copy.deepcopy(cache[url])
+    wait_turn()
     result = poor.http.post_json(url, body=input, headers={"Content-Type": "application/json"})
     result = poor.AttrDict(result)
     mode = MODE.get(ctype,"car")
@@ -169,6 +178,14 @@ def route(locations, params):
     if alternates and route["x"]:
         return [route] + alternates
     return route
+
+def wait_turn():
+    """Wait until the server's terms allow the next request."""
+    global _last_request
+    with _request_lock:
+        delay = _last_request + MIN_INTERVAL - time.monotonic()
+        if delay > 0: time.sleep(delay)
+        _last_request = time.monotonic()
 
 def parse_exit(maneuver, key):
     if "sign" not in maneuver or key not in maneuver["sign"]:
