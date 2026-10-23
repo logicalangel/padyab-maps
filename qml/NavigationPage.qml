@@ -18,7 +18,6 @@
 
 import QtQuick 2.0
 import QtPositioning 5.4
-import QtQuick.Layouts 1.1
 import pm 1.0
 import pm.platform 1.0
 
@@ -28,16 +27,98 @@ PagePL {
 
     Column {
         id: column
+        spacing: styler.themePaddingLarge
         width: parent.width
+
+        property real cardWidth: width - 2*styler.themeHorizontalPageMargin
+
+        Rectangle {
+            // summary: remaining time and distance, arrival and progress
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: styler.itemBg
+            height: summary.height + 2*styler.themePaddingLarge
+            radius: styler.cardRadius
+            width: column.cardWidth
+
+            Column {
+                id: summary
+                anchors.left: parent.left
+                anchors.leftMargin: styler.themePaddingLarge
+                anchors.right: parent.right
+                anchors.rightMargin: styler.themePaddingLarge
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: styler.themePaddingMedium
+
+                LabelPL {
+                    color: styler.itemFg
+                    font.bold: true
+                    font.pixelSize: Math.round(styler.themeFontSizeExtraLarge * 1.2)
+                    text: {
+                        if (app.mode === modes.navigatePost) return app.tr("Destination reached");
+                        return app.navigator.destTime || app.navigator.totalTime || "";
+                    }
+                    truncMode: truncModes.fade
+                    width: parent.width
+                }
+
+                LabelPL {
+                    color: styler.itemFg
+                    font.pixelSize: styler.themeFontSizeMedium
+                    opacity: 0.6
+                    text: {
+                        var parts = [];
+                        var dist = app.navigator.destDist || app.navigator.totalDist;
+                        if (dist && dist !== "-") parts.push(dist);
+                        if (app.navigator.destEta && app.navigator.destEta !== "-")
+                            parts.push(app.tr("%1 arrival").arg(app.navigator.destEta));
+                        return parts.join(" · ");
+                    }
+                    truncMode: truncModes.fade
+                    visible: app.mode !== modes.navigatePost && text
+                    width: parent.width
+                }
+
+                Rectangle {
+                    // progress along the route
+                    color: Qt.rgba(_fg.r, _fg.g, _fg.b, 0.1)
+                    height: Math.max(4, Math.round(styler.themePaddingSmall * 1.5))
+                    radius: height / 2
+                    width: parent.width
+
+                    property color _fg: styler.itemFg
+
+                    Rectangle {
+                        color: styler.route
+                        height: parent.height
+                        radius: height / 2
+                        width: Math.max(height, app.navigator.progress * parent.width)
+                    }
+                }
+
+                LabelPL {
+                    color: styler.itemFg
+                    font.pixelSize: styler.themeFontSizeSmall
+                    opacity: 0.6
+                    text: {
+                        if (!app.navigator.totalDist) return "";
+                        if (app.navigator.hasTraffic && app.navigator.totalTimeInTraffic)
+                            return app.tr("Total %1 · %2 (%3 with traffic)").arg(app.navigator.totalDist).
+                                     arg(app.navigator.totalTime).arg(app.navigator.totalTimeInTraffic);
+                        return app.tr("Total %1 · %2").arg(app.navigator.totalDist).arg(app.navigator.totalTime);
+                    }
+                    truncMode: truncModes.fade
+                    visible: text
+                    width: parent.width
+                }
+            }
+        }
 
         Row {
             // actions as large tiles: start or pause, reroute and clear
             id: row
-            anchors.left: parent.left
-            anchors.leftMargin: styler.themeHorizontalPageMargin
-            anchors.right: parent.right
-            anchors.rightMargin: styler.themeHorizontalPageMargin
+            anchors.horizontalCenter: parent.horizontalCenter
             spacing: styler.themePaddingMedium
+            width: column.cardWidth
 
             property bool running: app.mode === modes.navigate || app.mode === modes.navigatePost
             property real tileWidth: (width - 3*spacing) / 4
@@ -75,316 +156,172 @@ PagePL {
             }
         }
 
-        Spacer {
-            height: styler.themePaddingLarge
-        }
-
-        SectionHeaderPL {
-            text: app.tr("Status")
-        }
-
-        Spacer {
-            height: styler.themePaddingLarge
-        }
-
-        Item {
-            id: progress
+        LabelPL {
+            // section title
             anchors.left: parent.left
-            anchors.right: parent.right
-            height: styler.themePaddingSmall
-            Rectangle {
-                id: progressTotal
-                anchors.left: parent.left
-                anchors.leftMargin: styler.themeHorizontalPageMargin
-                anchors.right: parent.right
-                anchors.rightMargin: styler.themeHorizontalPageMargin
-                color: styler.themePrimaryColor
-                height: styler.themePaddingSmall
-                opacity: 0.15
-                radius: height / 2
-            }
-            Rectangle {
-                id: progressComplete
-                anchors.left: parent.left
-                anchors.leftMargin: styler.themeHorizontalPageMargin
-                color: styler.themeHighlightColor
-                height: styler.themePaddingSmall
-                radius: height / 2
-                width: app.navigator.progress * progressTotal.width
-            }
+            anchors.leftMargin: styler.themeHorizontalPageMargin + styler.themePaddingLarge
+            color: styler.themeHighlightColor
+            font.bold: true
+            font.pixelSize: styler.themeFontSizeMedium
+            opacity: 0.6
+            text: app.tr("Destinations and waypoints")
+            visible: locations.visible
         }
 
-        Spacer {
-            height: styler.themePaddingLarge + styler.themePaddingSmall
-        }
-
-        Row {
-            // ETA
-            anchors.left: parent.left
-            anchors.leftMargin: styler.themeHorizontalPageMargin
-            anchors.right: parent.right
-            anchors.rightMargin: styler.themeHorizontalPageMargin
-            height: styler.themeItemSizeExtraSmall
+        Rectangle {
+            id: locations
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: styler.itemBg
+            height: locColumn.height
+            radius: styler.cardRadius
             visible: app.mode !== modes.navigatePost
-            LabelPL {
-                id: eta
-                color: styler.themeSecondaryHighlightColor
-                height: styler.themeItemSizeExtraSmall
-                text: app.tr("Estimated time of arrival")
-                truncMode: truncModes.fade
-                verticalAlignment: Text.AlignVCenter
-                width: parent.width * 2 / 3
-            }
-            LabelPL {
-                anchors.baseline: eta.baseline
-                color: styler.themeHighlightColor
-                horizontalAlignment: Text.AlignRight
-                text: app.navigator.destEta
-                truncMode: truncModes.fade
-                width: parent.width / 3
-            }
-        }
+            width: column.cardWidth
 
-        RouteOverallInfo {
-            visible: app.mode !== modes.navigatePost
+            Column {
+                id: locColumn
+                width: parent.width
+
+                Repeater {
+                    id: locRep
+                    delegate: Rectangle {
+                        // one location: tap to see it on the map
+                        id: locItem
+                        color: locMouse.pressed ? styler.itemPressed : "transparent"
+                        height: Math.max(locTexts.height, removeButton.height) + 2*styler.themePaddingLarge
+                        radius: styler.cardRadius
+                        width: locColumn.width
+
+                        property bool removable: !model.final && !model.origin && model.activeIndex > 0
+
+                        MouseArea {
+                            id: locMouse
+                            anchors.fill: parent
+                            onClicked: {
+                                map.center = QtPositioning.coordinate(model.y, model.x);
+                                map.zoomLevel < 15 && map.setZoomLevel(15);
+                                app.hideNavigationPages();
+                            }
+                        }
+
+                        Rectangle {
+                            // origin blue, final destination red, others gray
+                            id: dot
+                            anchors.left: parent.left
+                            anchors.leftMargin: styler.themePaddingLarge
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: {
+                                if (model.origin) return styler.route;
+                                if (model.final) return styler.endBg;
+                                return Qt.rgba(_fg.r, _fg.g, _fg.b, 0.4);
+                            }
+                            height: Math.round(styler.themeFontSizeMedium * 0.9)
+                            opacity: model.arrived ? 0.4 : 1
+                            radius: height / 2
+                            width: height
+
+                            property color _fg: styler.itemFg
+                        }
+
+                        Column {
+                            id: locTexts
+                            anchors.left: dot.right
+                            anchors.leftMargin: styler.themePaddingLarge
+                            anchors.right: removeButton.visible ? removeButton.left : parent.right
+                            anchors.rightMargin: styler.themePaddingLarge
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            LabelPL {
+                                color: styler.itemFg
+                                font.pixelSize: styler.themeFontSizeMedium
+                                text: {
+                                    if (model.text) return model.text;
+                                    if (model.origin) return app.tr("Origin");
+                                    if (model.final) return app.tr("Final destination");
+                                    return model.destination ? app.tr("Destination") : app.tr("Waypoint");
+                                }
+                                truncMode: truncModes.fade
+                                width: parent.width
+                            }
+
+                            LabelPL {
+                                color: styler.itemFg
+                                font.pixelSize: styler.themeFontSizeSmall
+                                opacity: 0.6
+                                text: {
+                                    if (model.arrived) return app.tr("Arrived %1").arg(model.arrivedAt || "");
+                                    var parts = [];
+                                    if (model.dist) parts.push(model.time ? "%1 · %2".arg(model.dist).arg(model.time) : model.dist);
+                                    if (model.eta) parts.push(app.tr("%1 arrival").arg(model.eta));
+                                    if (model.legDist) parts.push(app.tr("leg %1").arg(model.legTime ? "%1 · %2".arg(model.legDist).arg(model.legTime) : model.legDist));
+                                    return parts.join(" · ");
+                                }
+                                truncMode: truncModes.fade
+                                visible: text
+                                width: parent.width
+                            }
+                        }
+
+                        CardButton {
+                            // removes a destination or a waypoint and reroutes
+                            id: removeButton
+                            anchors.right: parent.right
+                            anchors.rightMargin: styler.themePaddingLarge
+                            anchors.verticalCenter: parent.verticalCenter
+                            cross: true
+                            size: Math.round(styler.themeIconSizeSmall)
+                            visible: locItem.removable
+                            onClicked: locRep.removeLocationAndReroute(model.activeIndex)
+                        }
+
+                        Rectangle {
+                            // divider to the next location
+                            anchors.bottom: parent.bottom
+                            anchors.left: locTexts.left
+                            anchors.right: parent.right
+                            color: styler.itemFg
+                            height: 1
+                            opacity: 0.1
+                            visible: model.index < locRep.count - 1
+                        }
+                    }
+                    model: app.navigator.locationsModel
+
+                    function removeLocationAndReroute(index) {
+                        // has to be outside the location delegate as it will be destroyed
+                        // on removal of location
+                        if (!app.navigator.locationRemove(index)) return;
+                        app.navigator.reroute();
+                        app.hideNavigationPages();
+                    }
+                }
+            }
         }
 
         LabelPL {
+            // section title
             anchors.left: parent.left
-            anchors.leftMargin: styler.themeHorizontalPageMargin
-            anchors.right: parent.right
-            anchors.rightMargin: styler.themeHorizontalPageMargin
+            anchors.leftMargin: styler.themeHorizontalPageMargin + styler.themePaddingLarge
             color: styler.themeHighlightColor
-            height: implicitHeight + styler.themePaddingLarge
-            horizontalAlignment: Text.AlignHCenter
-            text: app.tr("Destination reached")
-            visible: app.mode === modes.navigatePost
-            verticalAlignment: Text.AlignTop
-            wrapMode: Text.WordWrap
-        }
-
-        Spacer {
-            height: styler.themePaddingLarge + styler.themePaddingSmall
-            visible: app.mode !== modes.navigatePost
-        }
-
-        SectionHeaderPL {
-            text: app.tr("Destinations and waypoints")
-        }
-
-        Repeater {
-            id: locRep
-            delegate: ListItemPL {
-                id: locRepItem
-                contentHeight: locItem.height
-                menu: ContextMenuPL {
-                    enabled: !model.final && !model.origin && model.activeIndex > 0
-                    ContextMenuItemPL {
-                        iconName: styler.iconDelete
-                        text: app.tr("Remove")
-                        onClicked: if (!model.final && model.activeIndex > 0)
-                                       locRep.removeLocationAndReroute(model.activeIndex)
-                    }
-                }
-
-                Item {
-                    id: locItem
-                    height: Math.max(locColumn.height + styler.themePaddingLarge,
-                                     styler.themeItemSizeSmall)
-                    width: parent.width
-
-                    Column {
-                        id: locColumn
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: styler.themePaddingMedium
-                        width: parent.width
-
-                        ListItemLabel {
-                            color: locRepItem.highlighted ? styler.themeHighlightColor : styler.themePrimaryColor
-                            text: {
-                                if (model.origin)
-                                    return model.text ? app.tr("Origin: %1", model.text) : app.tr("Origin");
-                                if (model.final)
-                                    return model.text ? app.tr("Final destination: %1", model.text) :
-                                                        app.tr("Final destination");
-                                return model.destination ?
-                                            app.tr("Destination: %1", model.text ? model.text : "") :
-                                            app.tr("Waypoint: %1", model.text ? model.text : "");
-                            }
-                        }
-
-                        // Remaining info
-                        GridLayout {
-                            id: glayout
-                            anchors.left: parent.left
-                            anchors.leftMargin: styler.themeHorizontalPageMargin
-                            anchors.right: parent.right
-                            anchors.rightMargin: styler.themeHorizontalPageMargin
-                            columnSpacing: styler.themePaddingMedium
-                            columns: {
-                                var col1 =
-                                        2*columnSpacing +
-                                        Math.max(lr1.implicitWidth + d1.implicitWidth + t1.implicitWidth,
-                                                 lr2.implicitWidth + t2.implicitWidth,
-                                                 lr3.implicitWidth + d3.implicitWidth + t3.implicitWidth,
-                                                 lr4.implicitWidth + t4.implicitWidth);
-                                var col2 =
-                                        columnSpacing +
-                                        Math.max(lr1.implicitWidth, lr2.implicitWidth,
-                                                 lr3.implicitWidth, lr4.implicitWidth) +
-                                        Math.max(d1.implicitWidth, t1.implicitWidth,
-                                                 t2.implicitWidth,
-                                                 d3.implicitWidth, t3.implicitWidth,
-                                                 t4.implicitWidth);
-                                if (col1 < width) return 3;
-                                if (col2 < width) return 2;
-                                return 1;
-                            }
-                            rowSpacing: styler.themePaddingMedium
-                            visible: hasRow3 || hasRow2 || hasRow1 || hasRow4
-
-                            property bool hasRow1: !model.arrived && model.dist
-                            property bool hasRow2: !model.arrived && model.eta
-                            property bool hasRow3: !model.arrived && model.legDist
-                            property bool hasRow4: model.arrived
-                            property var textColor: locRepItem.highlighted ? styler.themeSecondaryColor :
-                                                                             styler.themeSecondaryHighlightColor
-
-                            LabelPL {
-                                id: lr1
-                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                Layout.fillWidth: true
-                                Layout.rowSpan: glayout.columns===2 ? 2 : 1
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                horizontalAlignment: Text.AlignLeft
-                                text: visible ? app.tr("Remaining") : ""
-                                visible: glayout.hasRow1
-                            }
-
-                            LabelPL {
-                                id: d1
-                                Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                text: visible ? model.dist : ""
-                                visible: glayout.hasRow1
-                            }
-
-                            LabelPL {
-                                id: t1
-                                Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                text: visible ? model.time : ""
-                                visible: glayout.hasRow1
-                            }
-
-                            LabelPL {
-                                id: lr2
-                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                Layout.fillWidth: true
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                horizontalAlignment: Text.AlignLeft
-                                text: visible ? app.tr("ETA") : ""
-                                visible: glayout.hasRow2
-                            }
-
-                            LabelPL {
-                                id: t2
-                                Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                Layout.columnSpan: glayout.columns==3 ? 2 : 1
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                text: visible ? model.eta : ""
-                                visible: glayout.hasRow2
-                            }
-
-                            LabelPL {
-                                id: lr3
-                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                Layout.fillWidth: true
-                                Layout.rowSpan: glayout.columns===2 ? 2 : 1
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                horizontalAlignment: Text.AlignLeft
-                                // TRANSLATORS: Leg corresponds to the trip leg between two destinations, such as intermediate destinations on the route
-                                text: visible ? app.tr("Leg") : ""
-                                visible: glayout.hasRow3
-                            }
-
-                            LabelPL {
-                                id: d3
-                                Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                text: visible ? model.legDist : ""
-                                visible: glayout.hasRow3
-                            }
-
-                            LabelPL {
-                                id: t3
-                                Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                text: visible ? model.legTime : ""
-                                visible: glayout.hasRow3
-                            }
-
-                            LabelPL {
-                                id: lr4
-                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                Layout.fillWidth: true
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                horizontalAlignment: Text.AlignLeft
-                                text: visible ? app.tr("Arrived") : ""
-                                visible: glayout.hasRow4
-                            }
-
-                            LabelPL {
-                                id: t4
-                                Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                                Layout.columnSpan: glayout.columns==3 ? 2 : 1
-                                color: glayout.textColor
-                                font.pixelSize: styler.themeFontSizeMedium
-                                text: visible ? model.arrivedAt : ""
-                                visible: glayout.hasRow4
-                            }
-                        }
-                    }
-                }
-
-                onClicked: {
-                    map.center = QtPositioning.coordinate(model.y, model.x);
-                    map.zoomLevel < 15 && map.setZoomLevel(15);
-                    app.hideNavigationPages();
-                }
-            }
-            model: app.navigator.locationsModel
-            visible: app.mode !== modes.navigatePost
-
-            function removeLocationAndReroute(index) {
-                // has to be outside the location delegate as it will be destroyed
-                // on removal of location
-                if (!app.navigator.locationRemove(index)) return;
-                app.navigator.reroute();
-                app.hideNavigationPages();
-            }
-        }
-
-        Spacer {
-            height: styler.themePaddingLarge + styler.themePaddingSmall
-            visible: app.mode !== modes.navigatePost
-        }
-
-        SectionHeaderPL {
+            font.bold: true
+            font.pixelSize: styler.themeFontSizeMedium
+            opacity: 0.6
             text: app.tr("Maneuvers")
         }
 
-        NarrativeItem {
-            id: narrative
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: styler.itemBg
+            height: narrative.height
+            radius: styler.cardRadius
+            width: column.cardWidth
+
+            NarrativeItem {
+                id: narrative
+            }
+        }
+
+        Spacer {
+            height: styler.themePaddingLarge
         }
     }
 
