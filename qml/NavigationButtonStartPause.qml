@@ -44,10 +44,10 @@ MapButton {
     transitions: Transition {
         AnchorAnimation { duration: app.conf.animationDuration; }
     }
-    visible: app.mode === modes.exploreRoute || app.mode === modes.navigate ||
-             app.mode === modes.navigatePost || app.mode === modes.followMe
+    visible: app.mode === modes.navigate || app.mode === modes.navigatePost ||
+             app.mode === modes.followMe
     y: {
-        var needed = (navigationButtonClear.visible ? 2*height : height);
+        var needed = height;
         var p = parent.height/2 - needed/2;
         var proposed = p;
         if (scaleBar.opacity > 1e-5 && p < scaleBar.y + scaleBar.height && scaleBar.x < anchors.leftMargin + width)

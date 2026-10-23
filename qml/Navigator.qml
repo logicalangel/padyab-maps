@@ -25,6 +25,10 @@ import "js/util.js" as Util
 Item {
     id: navigator
 
+    // alternative routes found for the current destination, including the
+    // selected one. empty if the router gave only one route
+    property var    alternatives: []
+    property int    alternativeSelected: 0
     property alias  destDist:  navigatorBase.destDist
     property alias  destEta:   navigatorBase.destEta
     property alias  destTime:  navigatorBase.destTime
@@ -55,6 +59,7 @@ Item {
     property alias  optimized: navigatorBase.optimized
     property real   progress:  navigatorBase.progress / 100.0
     property string provider
+    property var    summary: ({})
     property int    rerouteConsecutiveErrors: 0
     property int    rerouteConsecutiveIgnored: 0
     property real   reroutePreviousTime: -1
@@ -137,6 +142,8 @@ Item {
                 destReached = false;
 
             if (running) {
+                // alternatives are offered only before starting
+                alternatives = [];
                 rerouteConsecutiveErrors = 0;
                 rerouteConsecutiveIgnored = 0;
                 reroutePreviousTime = -1;
@@ -191,8 +198,10 @@ Item {
     }
 
     function clearRoute() {
+        alternatives = [];
         navigatorBase.clearRoute();
         provider = "";
+        summary = {};
         saveRoute({});
     }
 
@@ -225,10 +234,15 @@ Item {
         var args = [loc,
                     options];
         py.call("poor.app.router.route", args, function(route) {
-            if (Array.isArray(route) && route.length > 0)
+            var found = [];
+            if (Array.isArray(route) && route.length > 0) {
                 // If the router returns multiple alternative routes,
-                // always route using the first one.
+                // route using the first one and offer the others.
+                found = route.filter(function (r) {
+                    return r && r.x && r.x.length > 0;
+                });
                 route = route[0];
+            }
             if (route && route.error && route.message) {
                 app.notification.flash(app.tr("Routing failed: %1").arg(route.message), notifyId);
                 if (options.voicePrompt) navigatorBase.prompt("std:routing failed");
@@ -240,6 +254,8 @@ Item {
                 if (options.voicePrompt) navigatorBase.prompt(traffic ? "std:traffic updated" :
                                                                         "std:new route found");
                 setRoute(route);
+                alternativeSelected = 0;
+                alternatives = !navigatorBase.running && found.length > 1 ? found : [];
                 rerouteConsecutiveErrors = 0;
                 if (options.fitToView) map.fitViewToRoute();
                 if (options.save) {
@@ -338,10 +354,18 @@ Item {
         py.call_sync("poor.storage.write_route", [data]);
     }
 
+    function selectAlternative(index) {
+        // Use one of the alternative routes
+        if (index === alternativeSelected || index < 0 || index >= alternatives.length) return;
+        alternativeSelected = index;
+        setRoute(alternatives[index]);
+    }
+
     function setRoute(route) {
         // Set new route
         navigatorBase.setRoute(route);
         provider = route.provider;
+        summary = route.summary || {};
         saveRoute(route);
     }
 

@@ -38,10 +38,8 @@ PageEmptyPL {
     MenuButton { id: menuButton }
     Meters { id: meters }
     NavigateButton { id: navigateButton }
-    NavigationButtonClear { id: navigationButtonClear }
     NavigationButtonStartPause { id: navigationButtonStartPause }
     NavigationBanner { id: navigationCurrent }
-    NavigationOverviewBlock { id: navigationOverview }
     NavigationSign { id: navigationSign }
     NavigationSpeedBadge { id: speedBadge }
     NavigationSpeedBlock { id: navigationSpeed }
@@ -52,6 +50,7 @@ PageEmptyPL {
     InfoPanel { id: infoPanel }
     Poi { id: pois }
     RemorsePopupPL { id: remorse; z: 1000 }
+    RouteSheet { id: routeSheet }
     ScaleBar { id: scaleBar }
     SpeedLimit { id: speedLimit }
     StreetName { id: streetName }
@@ -105,13 +104,12 @@ PageEmptyPL {
     // used internally for positioning items that can be
     // anchored to. as it is for internal use, its defined
     // below all items - an exception for general code formatting
-    property var _itemBottom: navigationTray.visible ? navigationTray : undefined
-    property var _itemTop: {
-        if (navigationCurrent.visible) return navigationCurrent;
-        if (navigationOverview.visible && !navigationOverview.showAtBottom)
-            return navigationOverview;
+    property var _itemBottom: {
+        if (navigationTray.visible) return navigationTray;
+        if (routeSheet.visible) return routeSheet;
         return undefined;
     }
+    property var _itemTop: navigationCurrent.visible ? navigationCurrent : undefined
     property double _posBottomCenter: _itemBottom ? _itemBottom.y : page.height
     property double _posBottomLeft: _itemBottom ? _itemBottom.y - _itemBottom.marginExtraLeft : page.height
     property double _posBottomRight: _itemBottom ? _itemBottom.y - _itemBottom.marginExtraRight : page.height

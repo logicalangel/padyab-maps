@@ -110,6 +110,20 @@ class Router:
                 mn["street"] = street
                 mnew.append(mn)
             route["maneuvers"] = mnew
+        if route.get("x"):
+            x, y = route["x"], route["y"]
+            length = sum(poor.util.calculate_distance(x[i], y[i], x[i+1], y[i+1])
+                         for i in range(len(x) - 1))
+            maneuvers = route.get("maneuvers", [])
+            duration = sum(m.get("duration", 0) for m in maneuvers)
+            # the street driven for the longest time describes the route
+            streets = [m for m in maneuvers if m.get("street")]
+            via = max(streets, key=lambda m: m.get("duration", 0))["street"] if streets else ""
+            route["summary"] = dict(dist=poor.util.format_distance(length),
+                                    duration=duration,
+                                    length=length,
+                                    time=poor.util.format_time(duration),
+                                    via=via)
 
     @property
     def results_qml_uri(self):

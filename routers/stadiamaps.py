@@ -146,6 +146,9 @@ def route(locations, params):
                  costing=ctype,
                  costing_options=costing_options,
                  directions_options=dict(language=language, units=units))
+    # ask for alternative routes between two points, not when rerouting
+    if heading is None and len(loc) == 2:
+        input["alternates"] = 2
 
     input = json.dumps(input)
     if optimized:
@@ -159,7 +162,14 @@ def route(locations, params):
     mode = MODE.get(ctype,"car")
     # set url id
     url = url + "_" + input
-    return parse_result_valhalla(url, locations, optimized, result, mode)
+    route = parse_result_valhalla(url, locations, optimized, result, mode)
+    alternates = [parse_result_valhalla(url + "_alternate{}".format(i), locations, optimized,
+                                        poor.AttrDict(alternate), mode)
+                  for i, alternate in enumerate(result.get("alternates", []))]
+    alternates = [r for r in alternates if r["x"]]
+    if alternates and route["x"]:
+        return [route] + alternates
+    return route
 
 def parse_exit(maneuver, key):
     if "sign" not in maneuver or key not in maneuver["sign"]:

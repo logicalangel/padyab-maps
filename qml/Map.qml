@@ -114,6 +114,8 @@ MapboxMap {
         readonly property string poisBookmarked:  "pure-layer-pois-bookmarked"
         readonly property string poisSelected:    "pure-layer-pois-selected"
         readonly property string route:           "pure-layer-route"
+        readonly property string routeAlternatives: "pure-layer-route-alternatives"
+        readonly property string routeAlternativesOutline: "pure-layer-route-alternatives-outline"
         readonly property string routeOutline:    "pure-layer-route-outline"
     }
 
@@ -124,6 +126,7 @@ MapboxMap {
         readonly property string poisBookmarked: "pure-source-pois-bookmarked"
         readonly property string poisSelected:   "pure-source-pois-selected"
         readonly property string route:          "pure-source-route"
+        readonly property string routeAlternatives: "pure-source-route-alternatives"
     }
 
     Behavior on bearing {
@@ -286,6 +289,8 @@ MapboxMap {
             updateManeuvers();
         }
         onLocationsChanged: updateLocations()
+        onAlternativesChanged: updateRouteAlternatives()
+        onAlternativeSelectedChanged: updateRouteAlternatives()
     }
 
     Connections {
@@ -320,6 +325,7 @@ MapboxMap {
         map.updatePois();
         map.updateMargins();
         map.updateRoute();
+        map.updateRouteAlternatives();
         map.updateManeuvers();
         map.updateLocations();
         map.setMode();
@@ -406,6 +412,17 @@ MapboxMap {
         map.setPaintProperty(map.layers.routeOutline, "line-gap-width", 16 * map.mapToQtPixelRatio);
         map.setPaintProperty(map.layers.routeOutline, "line-opacity", 1 - (1-styler.routeOpacity)/2);
         map.setPaintProperty(map.layers.routeOutline, "line-width", 4 * map.mapToQtPixelRatio);
+        // Configure layers for alternative routes, drawn lighter below the route.
+        map.setLayoutProperty(map.layers.routeAlternatives, "line-cap", "round");
+        map.setLayoutProperty(map.layers.routeAlternatives, "line-join", "round");
+        map.setPaintProperty(map.layers.routeAlternatives, "line-color", Qt.lighter(styler.route, 1.45).toString());
+        map.setPaintProperty(map.layers.routeAlternatives, "line-width", 12 * map.mapToQtPixelRatio);
+        map.setLayoutProperty(map.layers.routeAlternativesOutline, "line-cap", "round");
+        map.setLayoutProperty(map.layers.routeAlternativesOutline, "line-join", "round");
+        map.setPaintProperty(map.layers.routeAlternativesOutline, "line-color", Qt.darker(styler.route, 1.2).toString());
+        map.setPaintProperty(map.layers.routeAlternativesOutline, "line-gap-width", 12 * map.mapToQtPixelRatio);
+        map.setPaintProperty(map.layers.routeAlternativesOutline, "line-opacity", 0.6);
+        map.setPaintProperty(map.layers.routeAlternativesOutline, "line-width", 3 * map.mapToQtPixelRatio);
         // Configure layer for active maneuver markers.
         map.setPaintProperty(map.layers.maneuvers, "circle-color", styler.maneuver);
         map.setPaintProperty(map.layers.maneuvers, "circle-pitch-alignment", "map");
@@ -449,10 +466,18 @@ MapboxMap {
     }
 
     function fitViewToRoute() {
-        // Set center and zoom so that the whole route is visible.
+        // Set center and zoom so that the whole route and its alternatives are visible.
         map.autoCenter = false;
         map.autoRotate = false;
-        map.fitView(app.navigator.route, true);
+        var coords = [];
+        var route = app.navigator.route;
+        for (var i = 0; i < route.length; i++)
+            coords.push(route[i]);
+        var alternatives = app.navigator.alternatives;
+        for (var a = 0; a < alternatives.length; a++)
+            for (var j = 0; j < alternatives[a].x.length; j += 10)
+                coords.push(QtPositioning.coordinate(alternatives[a].y[j], alternatives[a].x[j]));
+        map.fitView(coords, true);
     }
 
     function initIcons() {
@@ -475,6 +500,8 @@ MapboxMap {
         map.addLayer(map.layers.poisBookmarked, {"type": "symbol", "source": map.sources.poisBookmarked});
         map.addLayer(map.layers.route, {"type": "line", "source": map.sources.route}, map.firstRouteLayer);
         map.addLayer(map.layers.routeOutline, {"type": "line", "source": map.sources.route}, map.firstLabelLayer);
+        map.addLayer(map.layers.routeAlternatives, {"type": "line", "source": map.sources.routeAlternatives}, map.layers.route);
+        map.addLayer(map.layers.routeAlternativesOutline, {"type": "line", "source": map.sources.routeAlternatives}, map.layers.routeAlternatives);
         map.addLayer(map.layers.maneuvers, {
                          "type": "circle",
                          "source": map.sources.maneuvers,
@@ -677,8 +704,8 @@ MapboxMap {
         // Calculate new margins and set them for the map.
         if (map.height <= 0) return;
         var header = referenceBlockTop.height > 0 ? referenceBlockTop.height : map.height*0.05;
-        var footer = !app.infoPanelOpen && (app.mode === modes.explore || app.mode === modes.exploreRoute) && menuButton ? menuButton.height + menuButton.anchors.bottomMargin : 0;
-        footer += !app.infoPanelOpen && (app.mode === modes.navigate || app.mode === modes.navigatePost || app.mode === modes.followMe) && referenceBlockBottom ? referenceBlockBottom.height : 0;
+        var footer = !app.infoPanelOpen && app.mode === modes.explore && menuButton ? menuButton.height + menuButton.anchors.bottomMargin : 0;
+        footer += !app.infoPanelOpen && (app.mode === modes.navigate || app.mode === modes.navigatePost || app.mode === modes.followMe || app.mode === modes.exploreRoute) && referenceBlockBottom ? referenceBlockBottom.height : 0;
         footer += !app.infoPanelOpen && (app.mode === modes.navigate || app.mode === modes.navigatePost || app.mode === modes.followMe) && streetName ? streetName.height : 0
         footer += app.infoPanelOpen && infoPanel ? infoPanel.height : 0
         footer = Math.min(footer, map.height / 2.0);
@@ -707,6 +734,22 @@ MapboxMap {
         }
         map.updateSourcePoints(map.sources.pois, regCoor, regName);
         map.updateSourcePoints(map.sources.poisBookmarked, bookmarkedCoor, bookmarkedName);
+    }
+
+    function updateRouteAlternatives() {
+        // Show alternative routes that are not selected.
+        var data = {"type": "FeatureCollection", "features": []};
+        var alternatives = app.navigator ? app.navigator.alternatives : [];
+        for (var i = 0; i < alternatives.length; i++) {
+            if (i === app.navigator.alternativeSelected) continue;
+            var coords = [];
+            for (var j = 0; j < alternatives[i].x.length; j++)
+                coords.push([alternatives[i].x[j], alternatives[i].y[j]]);
+            data.features.push({"type": "Feature",
+                                "geometry": {"type": "LineString", "coordinates": coords},
+                                "properties": {"index": i}});
+        }
+        map.updateSource(map.sources.routeAlternatives, {"type": "geojson", "data": data});
     }
 
     function updateRoute() {

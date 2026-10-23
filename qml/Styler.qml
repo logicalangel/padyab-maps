@@ -30,7 +30,9 @@ StylerPL {
                                           styler.blockBg.b*0.8 + styler.themeHighlightColor.b*0.2,
                                           styler.blockBg.a*0.8 + styler.themeHighlightColor.a*0.2)
     property real   cardRadius: 1.25*styler.themePaddingLarge // floating cards radius - do not change in defaults or style
+    property string endBg                // background of buttons ending navigation
     property string fg                   // foreground color (scale bar, metrics)
+    property string goBg                 // background of buttons starting navigation
     property string iconVariant          // type of icons, let empty for default version, "white" for white icons
     property real   indicatorSize: styler.themeIconSizeSmall*1.4142*(1 + 0.2) / 4 // indicator height and width - do not change in defaults or style
     property string itemBg               // map item (buttons, street name) outline
@@ -75,7 +77,9 @@ StylerPL {
     function defaults() {
         bannerBg = "#1d2127";
         bannerFg = "white";
+        endBg = "#e5383b";
         fg = "black";
+        goBg = "#2fb24c";
         iconVariant = "";
         maneuver = "white";
         mapFont = "Open Sans Regular";

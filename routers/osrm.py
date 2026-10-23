@@ -57,7 +57,7 @@ NARRATIVE = {
  "roundabout-turn": "Turn {modifier} in the roundabout.",
 }
 
-URL = "http://router.project-osrm.org/route/v1/car/{locstring}?steps=true&annotations=nodes&overview=full"
+URL = "http://router.project-osrm.org/route/v1/car/{locstring}?steps=true&annotations=nodes&overview=full{alternatives}"
 URL_OPT = "http://router.project-osrm.org/trip/v1/car/{locstring}?steps=true&annotations=nodes&overview=full" + \
     "&source=first&destination=last&roundtrip=false"
 cache = {}
@@ -135,10 +135,16 @@ def prepare_endpoint(point):
     return prepare_endpoint((results[0]["x"], results[0]["y"]))
 
 def route(locations, params):
-    """Find route and return its properties as a dictionary."""
+    """Find route and return its properties as a dictionary.
+
+    When alternative routes are found, a list of routes is returned
+    with the recommended one first.
+    """
     locstring = ";".join(map(prepare_endpoint, locations))
     heading = params.get('heading', None)
     optimized = params.get('optimized', False) if len(locations) > 3 else False
+    # OSRM gives alternatives only between two points; skip them when rerouting
+    alternatives = "&alternatives=true" if heading is None and len(locations) == 2 else ""
     if optimized:
         url = URL_OPT.format(**locals())
     else:
@@ -148,7 +154,19 @@ def route(locations, params):
     routes = "trips" if optimized else "routes"
     result = poor.http.get_json(url)
     waypoints = result["waypoints"]
-    result = poor.AttrDict(result[routes][0])
+    if optimized:
+        li = { waypoints[i]["waypoint_index"] : i for i in range(len(waypoints)) }
+        locations=[locations[li[i]] for i in range(len(waypoints))]
+    found = [parse_route(poor.AttrDict(r), locations, optimized) for r in result[routes]]
+    found = [r for r in found if r["x"]]
+    if not found:
+        return dict(x=[], y=[])
+    route = found[0] if len(found) == 1 else found
+    cache[url] = copy.deepcopy(route)
+    return route
+
+def parse_route(result, locations, optimized):
+    """Return route dictionary for one route of OSRM result."""
     x, y = poor.util.decode_epl(result.geometry)
     maneuvers, loc_index = [], [0]
     for leg in result.legs:
@@ -162,14 +180,9 @@ def route(locations, params):
             roundabout_exit_count=step.maneuver.get("exit", None),
         ) for step in leg.steps])
         loc_index.append(loc_index[-1] + len(leg.annotation.nodes) - 1)
-    if optimized:
-        li = { waypoints[i]["waypoint_index"] : i for i in range(len(waypoints)) }
-        locations=[locations[li[i]] for i in range(len(waypoints))]
     route = dict(x=x, y=y,
                  locations=locations,
                  location_indexes=loc_index,
                  maneuvers=maneuvers, mode="car", optimized=optimized)
     route["language"] = "en_US"
-    if route and route["x"]:
-        cache[url] = copy.deepcopy(route)
     return route

@@ -36,7 +36,7 @@ MapButton {
     transitions: Transition {
         AnchorAnimation { duration: app.conf.animationDuration; }
     }
-    visible: app.mode === modes.explore || app.mode === modes.exploreRoute
+    visible: app.mode === modes.explore
     z: 900
     onClicked: app.showMenu();
 
