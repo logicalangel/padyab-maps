@@ -82,7 +82,7 @@ PagePL {
 
         ListItemLabel {
             horizontalAlignment: Text.AlignHCenter
-            text: app.tr('GitHub <a href="https://github.com/logicalangel/pure-maps">project page</a>')
+            text: app.tr('GitHub <a href="https://github.com/logicalangel/padyab-maps">project page</a>')
         }
 
         Rectangle {

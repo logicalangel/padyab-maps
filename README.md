@@ -43,13 +43,13 @@ copyright of the original code stays with its authors.
 
 Ubuntu Touch click packages are built by the
 [Click package workflow](.github/workflows/click.yml) and attached to
-[releases](https://github.com/logicalangel/pure-maps/releases). The app
+[releases](https://github.com/logicalangel/padyab-maps/releases). The app
 id is `padyab-maps.logicalangel`, so it can be installed next to Pure
 Maps. For other platforms, build from source as described below.
 
 ## Feedback
 
-Please use the [issues](https://github.com/logicalangel/pure-maps/issues)
+Please use the [issues](https://github.com/logicalangel/padyab-maps/issues)
 of this repository. Problems that also happen in Pure Maps are best
 reported [there](https://github.com/rinigus/pure-maps/issues).
 

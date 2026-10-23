@@ -51,7 +51,7 @@ BROKEN_CONNECTION_ERRORS = [
 
 HEADERS = {
     "Connection": "Keep-Alive",
-    "User-Agent": "padyab-maps (+https://github.com/logicalangel/pure-maps)",
+    "User-Agent": "padyab-maps (+https://github.com/logicalangel/padyab-maps)",
 }
 
 RE_LOCALHOST = re.compile(r"://(127.0.0.1|localhost)\b")

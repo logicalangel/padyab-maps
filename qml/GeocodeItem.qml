@@ -307,7 +307,9 @@ Item {
             }
         }
         Component.onCompleted: {
-            var e = {"visible": true};
+            // preallocated rows stay hidden until update() fills them,
+            // otherwise blank rows flash while the list grows
+            var e = {"visible": false};
             _listDataKeys.forEach(function (k){
                 e[k] = "";
             });

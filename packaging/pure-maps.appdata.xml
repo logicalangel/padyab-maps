@@ -14,8 +14,8 @@
   <category>Qt</category>
  </categories>
  <content_rating type="oars-1.0" />
- <url type="homepage">https://github.com/logicalangel/pure-maps</url>
- <url type="bugtracker">https://github.com/logicalangel/pure-maps/issues</url>
+ <url type="homepage">https://github.com/logicalangel/padyab-maps</url>
+ <url type="bugtracker">https://github.com/logicalangel/padyab-maps/issues</url>
  <launchable type="desktop-id">io.github.logicalangel.PadyabMaps.desktop</launchable>
  <provides>
   <binary>padyab-maps</binary>
@@ -32,15 +32,15 @@
  <screenshots>
   <screenshot type="default">
    <caption>Map with search</caption>
-   <image>https://raw.githubusercontent.com/logicalangel/pure-maps/master/screenshots/main.png</image>
+   <image>https://raw.githubusercontent.com/logicalangel/padyab-maps/master/screenshots/main.png</image>
   </screenshot>
   <screenshot>
    <caption>Choosing between routes</caption>
-   <image>https://raw.githubusercontent.com/logicalangel/pure-maps/master/screenshots/directions.png</image>
+   <image>https://raw.githubusercontent.com/logicalangel/padyab-maps/master/screenshots/directions.png</image>
   </screenshot>
   <screenshot>
    <caption>Navigation</caption>
-   <image>https://raw.githubusercontent.com/logicalangel/pure-maps/master/screenshots/navigation.png</image>
+   <image>https://raw.githubusercontent.com/logicalangel/padyab-maps/master/screenshots/navigation.png</image>
   </screenshot>
  </screenshots>
  <metadata_license>CC-BY-SA-3.0</metadata_license>
