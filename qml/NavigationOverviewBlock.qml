@@ -37,7 +37,7 @@ Item {
             }
         }
     ]
-    visible: !app.modalDialog && (app.mode === modes.exploreRoute || app.mode === modes.navigate)
+    visible: !app.modalDialog && app.mode === modes.exploreRoute
     z: 400
 
     property int    compactTotalWidth: compactLeft.width + compactLeft.anchors.rightMargin + compactRight.width

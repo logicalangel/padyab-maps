@@ -402,17 +402,18 @@ MapboxMap {
         // Configure layer for route casing.
         map.setLayoutProperty(map.layers.routeOutline, "line-cap", "round");
         map.setLayoutProperty(map.layers.routeOutline, "line-join", "round");
-        map.setPaintProperty(map.layers.routeOutline, "line-color", styler.route);
+        map.setPaintProperty(map.layers.routeOutline, "line-color", Qt.darker(styler.route, 1.5).toString());
         map.setPaintProperty(map.layers.routeOutline, "line-gap-width", 16 * map.mapToQtPixelRatio);
         map.setPaintProperty(map.layers.routeOutline, "line-opacity", 1 - (1-styler.routeOpacity)/2);
         map.setPaintProperty(map.layers.routeOutline, "line-width", 4 * map.mapToQtPixelRatio);
         // Configure layer for active maneuver markers.
         map.setPaintProperty(map.layers.maneuvers, "circle-color", styler.maneuver);
         map.setPaintProperty(map.layers.maneuvers, "circle-pitch-alignment", "map");
-        map.setPaintProperty(map.layers.maneuvers, "circle-radius", 11 * map.mapToQtPixelRatio);
-        map.setPaintProperty(map.layers.maneuvers, "circle-stroke-color", styler.route);
-        map.setPaintProperty(map.layers.maneuvers, "circle-stroke-width", 4 * map.mapToQtPixelRatio);
-        // Configure layer for passive maneuver markers.
+        map.setPaintProperty(map.layers.maneuvers, "circle-radius", 6 * map.mapToQtPixelRatio);
+        map.setPaintProperty(map.layers.maneuvers, "circle-stroke-color", Qt.darker(styler.route, 1.5).toString());
+        map.setPaintProperty(map.layers.maneuvers, "circle-stroke-width", 3 * map.mapToQtPixelRatio);
+        // Configure layer for passive maneuver markers, hidden to keep the route clean.
+        map.setLayoutProperty(map.layers.nodes, "visibility", "none");
         map.setPaintProperty(map.layers.nodes, "circle-color", styler.maneuver);
         map.setPaintProperty(map.layers.nodes, "circle-pitch-alignment", "map");
         map.setPaintProperty(map.layers.nodes, "circle-radius", 5 * map.mapToQtPixelRatio);

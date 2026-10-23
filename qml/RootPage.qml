@@ -40,10 +40,12 @@ PageEmptyPL {
     NavigateButton { id: navigateButton }
     NavigationButtonClear { id: navigationButtonClear }
     NavigationButtonStartPause { id: navigationButtonStartPause }
-    NavigationCurrentBlock { id: navigationCurrent }
+    NavigationBanner { id: navigationCurrent }
     NavigationOverviewBlock { id: navigationOverview }
     NavigationSign { id: navigationSign }
+    NavigationSpeedBadge { id: speedBadge }
     NavigationSpeedBlock { id: navigationSpeed }
+    NavigationTray { id: navigationTray }
     Navigator { id: navigator }
     NorthArrow { id: northArrow }
     Notification { id: notification }
@@ -103,11 +105,7 @@ PageEmptyPL {
     // used internally for positioning items that can be
     // anchored to. as it is for internal use, its defined
     // below all items - an exception for general code formatting
-    property var _itemBottom: {
-        if (navigationOverview.visible && navigationOverview.showAtBottom)
-            return navigationOverview;
-        return undefined;
-    }
+    property var _itemBottom: navigationTray.visible ? navigationTray : undefined
     property var _itemTop: {
         if (navigationCurrent.visible) return navigationCurrent;
         if (navigationOverview.visible && !navigationOverview.showAtBottom)

@@ -27,14 +27,15 @@ Rectangle {
     anchors.bottomMargin: styler.themePaddingSmall
     anchors.horizontalCenter: parent.horizontalCenter
     color: "transparent"
-    height: !navigationOverview.streetNameInOverview ? cover.height : 0
-    visible: !app.modalDialog && !navigationOverview.streetNameInOverview
+    height: cover.height
+    visible: !app.modalDialog
     width: cover.width
     z: 400
 
     property int maxWidth: parent.width - 2*_x
     property int _x: {
-        var speed = speedLimit.visible ? speedLimit.x + speedLimit.width : 0;
+        var speed = Math.max(speedLimit.visible ? speedLimit.x + speedLimit.width : 0,
+                             speedBadge.visible ? speedBadge.x + speedBadge.width : 0);
         var left = Math.max(speed, referenceBlockBottomLeft.width);
         var right = referenceBlockBottomRight.width;
         return Math.max(left, right) + styler.themePaddingLarge

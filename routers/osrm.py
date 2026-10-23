@@ -157,6 +157,7 @@ def route(locations, params):
             y=float(step.maneuver.location[1]),
             icon=parse_icon(step.maneuver),
             narrative=parse_narrative(step.maneuver, step.get("name", "")),
+            street=[step.name] if step.get("name") else None,
             duration=float(step.duration),
             roundabout_exit_count=step.maneuver.get("exit", None),
         ) for step in leg.steps])

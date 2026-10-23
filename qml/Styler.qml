@@ -22,11 +22,14 @@ import pm.platform 1.0
 StylerPL {
     id: styler
 
+    property string bannerBg             // navigation guidance banner background
+    property string bannerFg             // navigation guidance banner text and icons
     // blockPressed should never be specified in style nor defaults
     property color  blockPressed: Qt.rgba(styler.blockBg.r*0.8 + styler.themeHighlightColor.r*0.2,
                                           styler.blockBg.g*0.8 + styler.themeHighlightColor.g*0.2,
                                           styler.blockBg.b*0.8 + styler.themeHighlightColor.b*0.2,
                                           styler.blockBg.a*0.8 + styler.themeHighlightColor.a*0.2)
+    property real   cardRadius: 1.25*styler.themePaddingLarge // floating cards radius - do not change in defaults or style
     property string fg                   // foreground color (scale bar, metrics)
     property string iconVariant          // type of icons, let empty for default version, "white" for white icons
     property real   indicatorSize: styler.themeIconSizeSmall*1.4142*(1 + 0.2) / 4 // indicator height and width - do not change in defaults or style
@@ -70,14 +73,16 @@ StylerPL {
     }
 
     function defaults() {
+        bannerBg = "#1d2127";
+        bannerFg = "white";
         fg = "black";
         iconVariant = "";
         maneuver = "white";
         mapFont = "Open Sans Regular";
         position = "";
         positionUncertainty = "#87cefa";
-        route = "#0540ff";
-        routeOpacity = 0.5;
+        route = "#1f7ef7";
+        routeOpacity = 0.9;
         itemFg = "black";
         itemBg = "white";
         shadowColor = "black";
