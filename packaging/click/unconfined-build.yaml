@@ -34,7 +34,7 @@ install_root_data:
 - packaging/click/manifest.json
 - packaging/click/app-dispatcher.json
 - packaging/click/pure-maps.desktop
-- packaging/click/pure-maps.svg
+- packaging/click/pure-maps-icon.svg
 install_data:
   ${PICOTTS_LIB_INSTALL_DIR}/usr/share/picotts: usr/share
 
