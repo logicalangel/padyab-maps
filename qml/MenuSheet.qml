@@ -82,7 +82,7 @@ MouseArea {
                         color: styler.itemFg
                         font.bold: true
                         font.pixelSize: styler.cardTitleFontSize
-                        text: "Pure Maps"
+                        text: "Padyab Maps"
                     }
 
                     CardButton {
@@ -257,7 +257,7 @@ MouseArea {
 
                         MenuRow {
                             iconSource: app.getIcon("icons/ui/info")
-                            label: app.tr("About Pure Maps")
+                            label: app.tr("About Padyab Maps")
                             last: true
                             onClicked: master.push("AboutPage.qml")
                         }

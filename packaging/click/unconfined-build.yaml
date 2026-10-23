@@ -4,20 +4,20 @@ scripts:
   prepare-deps: git submodule update --recursive --init && ENABLE_MIMIC=1 ${ROOT}/packaging/click/prepare-deps.sh
 
 framework: ubuntu-touch-24.04-1.x
-kill: pure-maps
+kill: padyab-maps
 
 builder: cmake
 build_args:
 - -DFLAVOR=uuitk
-- -DAPP_NAME=pure-maps-unconfined.jonnius
-- -DAPP_REV_NAME=pure-maps-slim.jonnius
+- -DAPP_NAME=padyab-maps.logicalangel
+- -DAPP_REV_NAME=padyab-maps.logicalangel
 - -DS2INCLUDES=${S2GEOMETRY_LIB_INSTALL_DIR}/include
 - -DS2LIBS=${S2GEOMETRY_LIB_INSTALL_DIR}/lib
 postbuild:
-- sed -i 's/@APP_TITLE@/Pure Maps Unconfined/g' ${INSTALL_DIR}/pure-maps.desktop
-- sed -i 's/@APP_TITLE@/Pure Maps Unconfined/g' ${INSTALL_DIR}/manifest.json
-- sed -i 's/@APP_NAME@/pure-maps-unconfined/g'  ${INSTALL_DIR}/manifest.json
-- mv ${INSTALL_DIR}/bin/pure-maps-unconfined.jonnius ${CLICK_PATH}/pure-maps
+- sed -i 's/@APP_TITLE@/Padyab Maps/g' ${INSTALL_DIR}/pure-maps.desktop
+- sed -i 's/@APP_TITLE@/Padyab Maps/g' ${INSTALL_DIR}/manifest.json
+- sed -i 's/@APP_NAME@/padyab-maps/g'  ${INSTALL_DIR}/manifest.json
+- mv ${INSTALL_DIR}/bin/padyab-maps.logicalangel ${CLICK_PATH}/padyab-maps
 - |
   jq '. + {"template": "unconfined"}' ${ROOT}/packaging/click/pure-maps.apparmor > ${INSTALL_DIR}/pure-maps.apparmor
 dependencies_host:

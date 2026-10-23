@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10.0)
 
-project(pure-maps
-    VERSION 3.5.1
-    DESCRIPTION "Maps and navigation")
+project(padyab-maps
+    VERSION 0.1.0
+    DESCRIPTION "Maps and navigation, based on Pure Maps")
 
 # options
 set(APP_NAME "" CACHE STRING "Name of the application, specify if custom name is needed")
@@ -69,8 +69,8 @@ if(NOT APP_NAME)
     if(FLAVOR STREQUAL "silica")
         set(APP_NAME harbour-pure-maps)
     else()
-        set(APP_NAME pure-maps)
-	set(APP_REV_NAME io.github.rinigus.PureMaps)
+        set(APP_NAME padyab-maps)
+	set(APP_REV_NAME io.github.logicalangel.PadyabMaps)
     endif()
 endif()
 
@@ -78,7 +78,7 @@ if(NOT APP_REV_NAME)
     if(FLAVOR STREQUAL "silica")
         set(APP_REV_NAME harbour-pure-maps)
     else()
-	set(APP_REV_NAME io.github.rinigus.PureMaps)
+	set(APP_REV_NAME io.github.logicalangel.PadyabMaps)
     endif()
 endif()
 

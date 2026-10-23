@@ -25,12 +25,12 @@ MenuDrawerPL {
     id: page
 
     banner: Qt.resolvedUrl("icons/banner.jpg")
-    title: "Pure Maps"
+    title: "Padyab Maps"
     titleIcon: "pure-maps"
     pageMenu: PageMenuPL {
         PageMenuItemPL {
             iconName: styler.iconAbout
-            text: app.tr("About Pure Maps")
+            text: app.tr("About Padyab Maps")
             onClicked: app.pushMain(Qt.resolvedUrl("AboutPage.qml"))
         }
     }

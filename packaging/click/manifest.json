@@ -1,16 +1,16 @@
 {
-    "name": "@APP_NAME@.jonnius",
-    "description": "Maps and Navigation",
+    "name": "padyab-maps.logicalangel",
+    "description": "Maps, search and navigation",
     "architecture": "@CLICK_ARCH@",
     "title": "@APP_TITLE@",
     "hooks": {
-        "@APP_NAME@": {
+        "padyab-maps": {
             "apparmor": "pure-maps.apparmor",
             "urls": "app-dispatcher.json",
             "desktop":  "pure-maps.desktop"
         }
     },
-    "version": "3.5.1-@CLICK_FRAMEWORK_BASE@",
-    "maintainer": "Rinigus <rinigus.git@gmail.org>",
+    "version": "0.1.0-@CLICK_FRAMEWORK_BASE@",
+    "maintainer": "Parya Rastegar <rastegar.parya3@gmail.com>",
     "framework" : "@CLICK_FRAMEWORK@"
 }

@@ -15,7 +15,7 @@ CmdLineParser *CmdLineParser::s_instance = nullptr;
 
 CmdLineParser::CmdLineParser(QObject *parent) : QObject(parent)
 {
-  m_parser.setApplicationDescription("Pure Maps");
+  m_parser.setApplicationDescription("Padyab Maps");
   const QCommandLineOption help(QStringList() << "h" << "help",
                                 QCoreApplication::translate("", "Displays help on commandline options."));
   const QCommandLineOption version(QStringList() << "v" << "version",
@@ -43,7 +43,7 @@ bool CmdLineParser::parse(const QStringList &arguments)
 
   if (m_parser.isSet("version"))
     {
-      std::cout << "Pure Maps " APP_VERSION << std::endl;
+      std::cout << "Padyab Maps " APP_VERSION << std::endl;
       return false;
     }
 

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=@APP_TITLE@
-Exec=pure-maps %u
+Exec=padyab-maps %u
 Icon=pure-maps-icon.svg
 Type=Application
 MimeType=x-scheme-handler/geo

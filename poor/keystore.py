@@ -98,13 +98,13 @@ KEYDESC = {
 LICENSES = {
     "HERE_APIKEY": LicenseDesc(
         _(
-            '<p>Your Pure Maps installation has enabled support for HERE services.</p><br>'
+            '<p>Your Padyab Maps installation has enabled support for HERE services.</p><br>'
             '<p>Please consult <a href="https://legal.here.com/en-gb/terms/here-end-user-terms">end-user terms</a>, '
             '<a href="https://legal.here.com/en-gb/terms/acceptable-use-policy">acceptable use policy</a>, '
             'and <a href="https://legal.here.com/en-gb/privacy">HERE Privacy policies</a>. '
-            'In context of use of HERE and privacy policy, Pure Maps communicates with HERE using REST API.<p></br>'
+            'In context of use of HERE and privacy policy, Padyab Maps communicates with HERE using REST API.<p></br>'
             '<p>For <a href="{lruri}">legal reasons</a>, '
-            'Pure Maps enables HERE search and routing in a dedicated "HERE Online" profile only. '
+            'Padyab Maps enables HERE search and routing in a dedicated "HERE Online" profile only. '
             'While not active anymore, see acceptable use policy of 2018 for details regarding '
             'use of HERE together with other providers under '
             '<a href="https://legal.here.com/en-gb/terms/acceptable-use-policy-2018">Layering and Modifications</a> '

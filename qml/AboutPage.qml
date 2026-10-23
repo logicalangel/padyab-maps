@@ -22,7 +22,7 @@ import pm.platform 1.0
 
 PagePL {
     id: page
-    title: app.tr("About Pure Maps")
+    title: app.tr("About Padyab Maps")
 
     Column {
         id: column
@@ -56,7 +56,7 @@ PagePL {
             font.bold: true
             font.pixelSize: styler.cardTitleFontSize
             horizontalAlignment: Text.AlignHCenter
-            text: "Pure Maps"
+            text: "Padyab Maps"
         }
 
         ListItemLabel {
@@ -75,8 +75,14 @@ PagePL {
         }
 
         ListItemLabel {
+            color: styler.themeSecondaryHighlightColor
             horizontalAlignment: Text.AlignHCenter
-            text: app.tr('GitHub <a href="https://github.com/rinigus/pure-maps">project page</a>')
+            text: app.tr('Based on <a href="https://github.com/rinigus/pure-maps">Pure Maps</a>')
+        }
+
+        ListItemLabel {
+            horizontalAlignment: Text.AlignHCenter
+            text: app.tr('GitHub <a href="https://github.com/logicalangel/pure-maps">project page</a>')
         }
 
         Rectangle {
@@ -108,14 +114,14 @@ PagePL {
                         font.pixelSize: styler.themeFontSizeSmall
                         height: implicitHeight
                         horizontalAlignment: Text.AlignRight
-                        text: "2014–2018 Osmo Salomaa\n2018-2022 Rinigus"
+                        text: "2014–2018 Osmo Salomaa\n2018-2022 Rinigus\n2026 Parya Rastegar"
                     }
 
                     ListItemLabel {
                         font.pixelSize: styler.themeFontSizeSmall
                         height: implicitHeight
                         horizontalAlignment: Text.AlignRight
-                        text: app.tr("Artwork by %1 and %2\nBanner photo by %3 (Pexels License)", "Fellfrosch", "Mosen", "Yaroslav Shuraev")
+                        text: app.tr("Interface, icon and markers by %1\nBanner photo by %2 (Pexels License)", "Parya Rastegar", "Yaroslav Shuraev")
                         wrapMode: Text.WordWrap
                     }
 
@@ -135,7 +141,7 @@ PagePL {
                     horizontalAlignment: implicitWidth >
                                          parent.width - anchors.leftMargin - anchors.rightMargin ?
                                              Text.AlignLeft : Text.AlignHCenter
-                    text: app.tr("Pure Maps is free software released under the GNU General Public License (GPL), version 3 or later.")
+                    text: app.tr("Padyab Maps is free software released under the GNU General Public License (GPL), version 3 or later.")
                     wrapMode: Text.WordWrap
                 }
             }
@@ -164,7 +170,7 @@ PagePL {
             horizontalAlignment: implicitWidth >
                                  parent.width - anchors.leftMargin - anchors.rightMargin ?
                                      Text.AlignLeft : Text.AlignHCenter
-            text: app.tr("You can add new user interface translations or contribute to existing ones at Transifex.")
+            text: app.tr("Translations come from Pure Maps, where you can add new ones or improve existing ones at Transifex.")
             wrapMode: Text.WordWrap
         }
 

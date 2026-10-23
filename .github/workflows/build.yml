@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - apple-maps-design
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container: ghcr.io/rinigus/pure-maps-devcontainer-qt5:latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Build (Kirigami, Qt 5)
+        run: |
+          cmake --preset debug-kirigami-qt5
+          cmake --build build -j"$(nproc)"
+
+      - name: Check Python and JSON files
+        run: |
+          python3 -m pyflakes --version >/dev/null 2>&1 || pip3 install --break-system-packages pyflakes
+          python3 -m pyflakes geocoders guides poor routers
+          find . -path ./thirdparty -prune -o -type f -name "*.json" -print0 | xargs -0 -n 1 tools/check-json

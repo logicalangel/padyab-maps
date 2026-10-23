@@ -70,7 +70,7 @@ class Sun:
                 counter += 1
             if counter >= 3:
                 print("Please check the daylight algorithm. Coordinates:", latitude, longitude, " / time", now)
-                print("Please file the bug at Pure Maps GitHub and send these data via private email")
+                print("Please file the bug at Padyab Maps GitHub and send these data via private email")
 
             if srise < now and sset > now:
                 light, valid = True, sset

@@ -24,7 +24,6 @@ https://docs.stadiamaps.com/
 import copy
 import json
 import poor
-import urllib.parse
 
 CONF_DEFAULTS = {
     "bicycle_type": "Hybrid",

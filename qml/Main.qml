@@ -26,7 +26,7 @@ ApplicationWindowPL {
     id: app
     initialPage: InitPage { }
     menuPageUrl: Qt.resolvedUrl("MenuPage.qml")
-    title: app.tr("Pure Maps")
+    title: app.tr("Padyab Maps")
 
     keepAlive: app.conf.keepAlive === "always"
                || (app.conf.keepAlive === "navigating" &&

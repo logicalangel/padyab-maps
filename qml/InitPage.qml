@@ -22,7 +22,7 @@ import pm.platform 1.0
 
 PageEmptyPL {
     id: page
-    title: "Pure Maps"
+    title: "Padyab Maps"
 
     property bool ready: false
     property var  licensesMissing
@@ -67,7 +67,7 @@ PageEmptyPL {
                              "message": app.tr("Your installation is missing %1 API key. " +
                                                "Please register at %1 and fill in your personal API key " +
                                                "in Preferences. This key is not needed if you plan to use " +
-                                               "Pure Maps with the offline map provider.", provider)
+                                               "Padyab Maps with the offline map provider.", provider)
                          });
                 d.Component.destruction.connect(showStartMessages)
                 app.fontKeyMissing = true;
@@ -85,13 +85,13 @@ PageEmptyPL {
                    app.conf.get("message_jolla_store_last_version") !== programVersion) {
                 var d = app.push(Qt.resolvedUrl("MessagePage.qml"), {
                              "acceptText": app.tr("Dismiss"),
-                             "title": app.tr("Pure Maps at Jolla Store"),
-                             "message": app.tr("You are using Pure Maps distributed through Jolla Store. " +
-                                               "Due to Jolla Store restrictions, Pure Maps distributed via that store has several limitations. " +
+                             "title": app.tr("Padyab Maps at Jolla Store"),
+                             "message": app.tr("You are using Padyab Maps distributed through Jolla Store. " +
+                                               "Due to Jolla Store restrictions, Padyab Maps distributed via that store has several limitations. " +
                                                "With the introduction of Sailjail, limitations include inability to provide voice prompts, " +
                                                "display current street and speed limits through " +
                                                "matching position to street network.\n\n" +
-                                               "To get fully functional Pure Maps, it is recommended to use Sailfish Chum and install Pure Maps from there.")
+                                               "To get fully functional Padyab Maps, it is recommended to use Sailfish Chum and install Padyab Maps from there.")
                          });
                 d.Component.destruction.connect(showStartMessages)
                 app.conf.set("message_jolla_store_last_version", programVersion);

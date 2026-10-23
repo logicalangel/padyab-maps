@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
- <id>io.github.rinigus.PureMaps</id>
- <name>Pure Maps</name>
- <summary>Maps and navigation</summary>
- <developer_name>Rinigus</developer_name>
+ <id>io.github.logicalangel.PadyabMaps</id>
+ <name>Padyab Maps</name>
+ <summary>Maps, search and navigation</summary>
+ <developer_name>Parya Rastegar</developer_name>
  <description>
-   <p>Pure Maps is an application to display vector and raster maps, places, routes, and provide navigation instructions with a flexible selection of data and service providers.</p>
-   <p>Depending on the used service provider, Pure Maps can rely fully either on online services or, together with OSM Scout Server, provide fully offline maps</p>
+   <p>Padyab Maps shows maps, finds places and routes, and gives turn by turn navigation, with a clean interface of floating cards and sheets.</p>
+   <p>It is based on Pure Maps by Rinigus and Osmo Salomaa. Online it uses open services such as OpenFreeMap maps and Valhalla routing; together with OSM Scout Server it works fully offline.</p>
  </description>
  <categories>
   <category>Science</category>
@@ -14,13 +14,11 @@
   <category>Qt</category>
  </categories>
  <content_rating type="oars-1.0" />
- <url type="homepage">https://github.com/rinigus/pure-maps</url>
- <url type="bugtracker">https://github.com/rinigus/pure-maps/issues</url>
- <url type="donation">https://rinigus.github.io/donate</url>
- <url type="translate">https://www.transifex.com/rinigus/pure-maps</url>
- <launchable type="desktop-id">io.github.rinigus.PureMaps.desktop</launchable>
+ <url type="homepage">https://github.com/logicalangel/pure-maps</url>
+ <url type="bugtracker">https://github.com/logicalangel/pure-maps/issues</url>
+ <launchable type="desktop-id">io.github.logicalangel.PadyabMaps.desktop</launchable>
  <provides>
-  <binary>pure-maps</binary>
+  <binary>padyab-maps</binary>
  </provides>
  <project_license>GPL-3.0-or-later</project_license>
  <supports>
@@ -33,20 +31,31 @@
  </requires>
  <screenshots>
   <screenshot type="default">
-   <caption>Main screen of the application</caption>
-   <image>https://raw.githubusercontent.com/rinigus/pure-maps/master/screenshots/main.png</image>
+   <caption>Map with search</caption>
+   <image>https://raw.githubusercontent.com/logicalangel/pure-maps/master/screenshots/main.png</image>
   </screenshot>
   <screenshot>
-   <caption>Selection of profiles</caption>
-   <image>https://raw.githubusercontent.com/rinigus/pure-maps/master/screenshots/menu.png</image>
+   <caption>Choosing between routes</caption>
+   <image>https://raw.githubusercontent.com/logicalangel/pure-maps/master/screenshots/directions.png</image>
   </screenshot>
   <screenshot>
-   <caption>Support for languages by address parser</caption>
-   <image>https://raw.githubusercontent.com/rinigus/pure-maps/master/screenshots/navigation.png</image>
+   <caption>Navigation</caption>
+   <image>https://raw.githubusercontent.com/logicalangel/pure-maps/master/screenshots/navigation.png</image>
   </screenshot>
  </screenshots>
  <metadata_license>CC-BY-SA-3.0</metadata_license>
  <releases>
+   <release  version="0.1.0" date="2026-10-23">
+     <description>
+       <ul>
+	 <li>New interface with floating cards and sheets for search, places, directions, navigation, maps and the menu</li>
+	 <li>Alternative routes to choose from before starting navigation</li>
+	 <li>Routing with the public Valhalla server of FOSSGIS, no API key needed</li>
+	 <li>New map markers, position marker and app icon</li>
+	 <li>Fixes for running as Ubuntu Touch click package</li>
+       </ul>
+     </description>
+   </release>
    <release  version="3.5.1" date="2026-05-30">
      <description>
        <ul>

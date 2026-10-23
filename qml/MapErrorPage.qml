@@ -41,7 +41,7 @@ PagePL {
                          "by network failure, expired API access key, absence of " +
                          "offline server. Try to address the issue and/or change your" +
                          " map provider, preferences, or profile.\n" +
-                         "If you change API access key, you may have to restart Pure Maps.")
+                         "If you change API access key, you may have to restart Padyab Maps.")
             truncMode: truncModes.none
             wrapMode: Text.WordWrap
         }

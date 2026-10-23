@@ -24,7 +24,6 @@ https://valhalla1.openstreetmap.de and https://github.com/valhalla/valhalla
 import copy
 import json
 import poor
-import urllib.parse
 
 CONF_DEFAULTS = {
     "bicycle_type": "Hybrid",

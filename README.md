@@ -1,56 +1,72 @@
-# Pure Maps
+# Padyab Maps
 
-[![Matrix](https://img.shields.io/badge/matrix.org-%23pure--maps-blue)](https://matrix.to/#/#pure-maps:matrix.org)
-[![Discussions](https://img.shields.io/badge/forum-GitHub-FB9200)](https://github.com/rinigus/pure-maps/discussions)
+Padyab Maps shows maps, finds places and routes, and gives turn by
+turn navigation. It runs on Linux phones and desktops (Ubuntu Touch,
+Kirigami, Qt Quick Controls; Qt 5 and Qt 6), with an interface of
+floating cards and sheets over the map.
 
-[![Latest release](https://img.shields.io/github/v/release/rinigus/pure-maps)](https://github.com/rinigus/pure-maps/releases)
-[![SFOS](https://img.shields.io/badge/SailfishOS-Chum-1CA198)](https://build.sailfishos.org/package/show/sailfishos:chum/pure-maps)
-[![Ubuntu Touch](https://img.shields.io/badge/Ubuntu%20Touch-OpenStore-292929)](https://open-store.io/app/pure-maps.jonnius)
-[![Flatpak](https://img.shields.io/badge/Flatpak-Flathub-4A86CF)](https://flathub.org/apps/details/io.github.rinigus.PureMaps)
+<p>
+<img src="screenshots/main.png" width="19%" alt="Map with search">
+<img src="screenshots/place.png" width="19%" alt="Place card">
+<img src="screenshots/directions.png" width="19%" alt="Choosing a route">
+<img src="screenshots/navigation.png" width="19%" alt="Navigation">
+<img src="screenshots/menu.png" width="19%" alt="Menu">
+</p>
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/pure-maps.svg)](https://repology.org/project/pure-maps/versions)
+## Based on Pure Maps
 
-Pure Maps is an application for Sailfish OS and Linux to display
-vector and raster maps, places, routes, and provide navigation
-instructions with a flexible selection of data and service providers.
+Padyab Maps is a fork of [Pure Maps](https://github.com/rinigus/pure-maps)
+by Rinigus, which itself continues
+[WhoGo Maps](https://github.com/otsaloma/whogo-maps) by Osmo Salomaa.
+The map engine, routing, search, offline support through OSM Scout
+Server, voice navigation and the platform support all come from Pure
+Maps. Padyab Maps changes the interface and some defaults:
 
-Pure Maps is free software released under the GNU General Public
-License (GPL), see the file [`COPYING`](COPYING) for details. Pure
-Maps is a fork of [WhoGo Maps](https://github.com/otsaloma/whogo-maps)
-that was made to continue its development.
+- Search, place cards, route selection, navigation, the map chooser
+  and the menu are cards and sheets over the map.
+- Alternative routes are offered before starting navigation, with
+  their time, distance and main street.
+- Online routing uses the public [Valhalla](https://github.com/valhalla/valhalla)
+  server of [FOSSGIS](https://www.fossgis.de), so no API key is needed.
+  Please keep to its fair use terms: at most one request per second
+  and no heavy use.
+- New map markers, position marker and app icon.
 
+Fixes that also matter for Pure Maps are meant to go upstream as
+separate pull requests.
 
-## User feedback
+Padyab Maps is free software released under the GNU General Public
+License (GPL), version 3 or later, see [`COPYING`](COPYING). The
+copyright of the original code stays with its authors.
 
-There are three main communication channels with the users: GitHub
-[discussions](https://github.com/rinigus/pure-maps/discussions) and
-issues, Matrix channel
-[#pure-maps:matrix.org](https://matrix.to/#/#pure-maps:matrix.org) and
-a thread at [TMO](https://talk.maemo.org/showthread.php?t=100442).
+## Install
 
-Please use Github issues to address specific problems and development
-requests. General discussion is expected either through corresponding
-topics in GitHub discussions, issues, Matrix channel, or TMO
-thread. 
+Ubuntu Touch click packages are built by the
+[Click package workflow](.github/workflows/click.yml) and attached to
+[releases](https://github.com/logicalangel/pure-maps/releases). The app
+id is `padyab-maps.logicalangel`, so it can be installed next to Pure
+Maps. For other platforms, build from source as described below.
 
-Currently, the homepage for Pure Maps is a placeholder. You are
-welcome to help by working on the corresponding
-[issue](https://github.com/rinigus/pure-maps/issues/400).
+## Feedback
+
+Please use the [issues](https://github.com/logicalangel/pure-maps/issues)
+of this repository. Problems that also happen in Pure Maps are best
+reported [there](https://github.com/rinigus/pure-maps/issues).
 
 
 ## Command line options
 
-Pure Maps supports positional argument (one) that could either specify
+Padyab Maps supports positional argument (one) that could either specify
 `geo:latitude,longitude` URI or a search string that will be searched
 by geocoder.
 
-If Pure Maps instance is running already, it will be contacted via
+If Padyab Maps instance is running already, it will be contacted via
 DBus and the request will be forwarded.
 
 
 ## DBus API
 
-DBus (service `io.github.rinigus.PureMaps` at session bus) can be used
+DBus (service `io.github.logicalangel.PadyabMaps` at session bus) can be used
 to
 
 * search: method `Search`
@@ -61,8 +77,8 @@ There service is split as described below.
 
 ### Global actions
 
-Path: `/io/github/rinigus/PureMaps`
-Interface: `io.github.rinigus.PureMaps`
+Path: `/io/github/logicalangel/PadyabMaps`
+Interface: `io.github.logicalangel.PadyabMaps`
 
 Methods:
 
@@ -75,8 +91,8 @@ Methods:
 
 ### Navigation
 
-Path: `/io/github/rinigus/PureMaps/navigator`
-Interface: `io.github.rinigus.PureMaps.navigator`
+Path: `/io/github/logicalangel/PadyabMaps/navigator`
+Interface: `io.github.logicalangel.PadyabMaps.navigator`
 
 Methods:
 
@@ -120,7 +136,7 @@ the value of the property has changed.
 
 * `running` - whether navigation in active
 
-* `street` - short form of the narrative usually shown in Pure Maps
+* `street` - short form of the narrative usually shown in Padyab Maps
   next to the maneuver icon. Could be absent for some maneuvers
 
 * `totalDist`, `totalTime` - total route distance and time in human
@@ -132,9 +148,9 @@ the value of the property has changed.
 Note that you will need API keys if you wish to access the services
 that require them (such as Mapbox). For that, register as a developer
 and insert these keys in the preferences. Among services that don't
-require API keys are OSM Scout Server (for offline maps), HSL (raster
-tiles for Finland), Sputnik (raster tiles in Russian), Photon
-(search).
+require API keys are OSM Scout Server (for offline maps), OpenFreeMap
+(map tiles), Photon (search) and the FOSSGIS Valhalla server
+(routing).
 
 
 ## Packaging
@@ -159,7 +175,7 @@ Ubuntu Touch specific instructions are available in
 
 ## Development environment
 
-For development of Pure Maps and testing on desktop, you would have to
+For development of Padyab Maps and testing on desktop, you would have to
 choose platform for which you develop, install dependencies, and be
 able to run the application. In this case, Qt Creator or VSCode can be used.
 
@@ -172,7 +188,7 @@ Alternative is to use Dev Containers. Three containers are available:
 
 To use them, install a Dev Containers compatible editor extension, such as
 VSCode Dev Containers, and make sure either Docker or Podman is available.
-Open the Pure Maps source tree in the editor, run the "Dev Containers: Reopen
+Open the Padyab Maps source tree in the editor, run the "Dev Containers: Reopen
 in Container" command, and select one of the containers above. The container
 builds the development dependencies and mounts the source tree at `/workspace`.
 If you switch containers later, use the "Dev Containers: Rebuild and Reopen in
@@ -188,7 +204,7 @@ Qt plugin. Configure with
 `cmake --preset <preset-name>` and build with `cmake --build build`.
 
 Do not run `cmake --install` for builds configured with these presets. They are
-made for running Pure Maps directly from the source folder, and CMake emits a
+made for running Padyab Maps directly from the source folder, and CMake emits a
 warning for this configuration. For installation or packaging, use a separate
 build configured without `RUN_FROM_SOURCE`.
 
@@ -219,7 +235,7 @@ look under other platforms for examples.
 
 ## Building from Source
 
-To build PureMaps from source, please refer to the [Build.md](./Build.md) file.
+To build Padyab Maps from source, please refer to the [Build.md](./Build.md) file.
 It provides comprehensive instructions for compiling the application on systems such as Debian 12 and Ubuntu 24.04.
 
 ### General

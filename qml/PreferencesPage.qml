@@ -164,8 +164,8 @@ PagePL {
                     ListItemLabel {
                         color: styler.themeHighlightColor
                         text: app.tr("You can control if and when " +
-                                     "Pure Maps keeps display active and works in the background. " +
-                                     "It is recommended to allow Pure Maps to prevent screensaver " +
+                                     "Padyab Maps keeps display active and works in the background. " +
+                                     "It is recommended to allow Padyab Maps to prevent screensaver " +
                                      "during navigation and never prevent the device suspend directly. " +
                                      "The latter is useful if you wish to receive voice navigation commands " +
                                      "while keeping device in the pocket.")
@@ -177,7 +177,7 @@ PagePL {
                         spacing: styler.themePaddingMedium
 
                         ComboBoxPL {
-                            description: app.tr("Only applies when Pure Maps is active. When minimized, screensaver " +
+                            description: app.tr("Only applies when Padyab Maps is active. When minimized, screensaver " +
                                                 "is controlled by normal device-level preferences.")
                             label: app.tr("Prevent screensaver")
                             model: [ app.tr("Never"), app.tr("When navigating"), app.tr("Always") ]
@@ -458,7 +458,7 @@ PagePL {
 
                     ComboBoxPL {
                         id: mapmatchingComboBox
-                        description: app.tr("Select mode of transportation. Only applies when Pure Maps is not navigating. Uses OSM Scout Server for its operation.")
+                        description: app.tr("Select mode of transportation. Only applies when Padyab Maps is not navigating. Uses OSM Scout Server for its operation.")
                         label: app.tr("Snap position to road")
                         model: [ app.tr("None"), app.tr("Car"), app.tr("Bicycle"), app.tr("Foot") ]
                         property var values: ["none", "car", "bicycle", "foot"]
@@ -932,8 +932,8 @@ PagePL {
                         text: voice.currentEngine ? app.tr("Selected voice engine: %1",
                                                            voice.currentEngine) :
                                                     app.tr("No engine available for selected language.\n\n" +
-                                                           "Pure Maps supports Mimic, Flite, PicoTTS, and " +
-                                                           "Espeak TTS engines. Unless you are using Pure Maps " +
+                                                           "Padyab Maps supports Mimic, Flite, PicoTTS, and " +
+                                                           "Espeak TTS engines. Unless you are using Padyab Maps " +
                                                            "through Flatpak or OpenStore, the engines have " +
                                                            "to be installed separately. Sailfish OS users " +
                                                            "can find the engines at Chum.")

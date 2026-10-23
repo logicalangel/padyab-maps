@@ -1,0 +1,43 @@
+name: Click package
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  click:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install Clickable
+        run: pipx install clickable-ut
+
+      - name: Prepare dependencies
+        run: clickable script prepare-deps -c packaging/click/slim-build.yaml
+
+      - name: Build libraries (arm64)
+        run: clickable build --libs --arch arm64 -c packaging/click/slim-build.yaml
+
+      - name: Build click (arm64)
+        run: clickable build --arch arm64 -c packaging/click/slim-build.yaml
+
+      - name: Upload click
+        uses: actions/upload-artifact@v4
+        with:
+          name: padyab-maps-click-arm64
+          path: build/*/app/*.click
+
+      - name: Attach click to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${GITHUB_REF_NAME}" build/*/app/*.click --clobber

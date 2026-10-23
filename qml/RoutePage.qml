@@ -676,7 +676,7 @@ DialogPL {
                 spacing: styler.themePaddingMedium
 
                 ComboBoxPL {
-                    description: app.tr("Select mode of transportation. Only applies when Pure Maps is in " +
+                    description: app.tr("Select mode of transportation. Only applies when Padyab Maps is in " +
                                         "follow me mode.")
                     label: app.tr("Mode of transportation")
                     model: [ app.tr("Car"), app.tr("Bicycle"), app.tr("Foot") ]

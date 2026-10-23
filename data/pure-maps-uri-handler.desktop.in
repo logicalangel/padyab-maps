@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Pure Maps Uri Handler
+Name=Padyab Maps Uri Handler
 MimeType=x-scheme-handler/geo
 Exec=@CMAKE_INSTALL_FULL_BINDIR@/@APP_NAME@ %u
 Icon=@APP_REV_NAME@

@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
   if (!parser->parse(app->arguments()))
     return 0;
 
-  // check if Pure Maps is running already.
+  // check if the app is running already.
   // forward cmd line arguments if it does
   {
     QDBusInterface iface(DBUS_SERVICE, DBUS_PATH_ROOT, DBUS_INTERFACE_ROOT);
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
   rootContext->engine()->addImportPath(QML_IMPORT_PATH);
 #endif
 
-  rootContext->setContextProperty("programName", "Pure Maps");
+  rootContext->setContextProperty("programName", "Padyab Maps");
   rootContext->setContextProperty("programVersion", APP_VERSION);
   rootContext->setContextProperty("programVariantJollaStore",
 #ifdef APP_VARIANT_JOLLA_STORE
