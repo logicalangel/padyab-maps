@@ -1,0 +1,46 @@
+Name
+Padyab Maps
+
+Tagline
+Maps, search and turn-by-turn navigation with a clean, card-based interface
+
+Description
+Padyab Maps shows maps, finds places and gives turn-by-turn navigation, in an
+interface of floating cards and sheets over the map.
+
+- Search for places and addresses right from the map.
+- Place cards with directions, saving and nearby search.
+- Choose between alternative routes before you start, with time, arrival,
+  distance and the main road of each.
+- Turn-by-turn navigation with a guidance banner, the next turn, the remaining
+  time and distance, and spoken instructions.
+- Several map styles. No API keys needed: maps from OpenFreeMap, search from
+  Photon, routing from the Valhalla server of FOSSGIS.
+- Offline maps, search and routing with OSM Scout Server (installed
+  separately, then choose the Offline profile in the menu).
+
+Your position stays on the phone. Searches and route requests are sent to the
+online services named above, or to OSM Scout Server when you use it.
+
+Padyab Maps is based on Pure Maps by Rinigus and Osmo Salomaa, with a new
+interface. It installs next to Pure Maps and keeps its own settings.
+
+Changelog (0.1.0)
+First release:
+- New card-based interface for search, places, directions, navigation, map
+  styles and the menu
+- Alternative routes before starting navigation
+- Routing without an API key, through the FOSSGIS Valhalla server
+- New map markers, position marker and app icon
+
+License: GPL-3.0-or-later
+Source: https://github.com/logicalangel/padyab-maps
+Support: https://github.com/logicalangel/padyab-maps/issues
+Category: Travel & Local (or the nearest one)
+Keywords: maps, navigation, gps, route, openstreetmap, offline
+
+Files
+padyab-maps.logicalangel_0.1.0-24.04-1.x_arm64.click   arm64 (most phones)
+padyab-maps.logicalangel_0.1.0-24.04-1.x_armhf.click   armhf (older 32-bit phones)
+padyab-maps.logicalangel_0.1.0-24.04-1.x_amd64.click   amd64 (desktop mode)
+Screenshots: main.png, place.png, directions.png, navigation.png, menu.png
