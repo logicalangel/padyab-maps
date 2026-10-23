@@ -13,6 +13,11 @@ jobs:
   click:
     runs-on: ubuntu-24.04
     timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        # the OpenStore takes one click per architecture
+        arch: [arm64, armhf, amd64]
     env:
       # the runner has podman too, which fails to map the container user ids
       CLICKABLE_DOCKER_COMMAND: docker
@@ -27,16 +32,16 @@ jobs:
       - name: Prepare dependencies
         run: clickable script prepare-deps -c packaging/click/slim-build.yaml
 
-      - name: Build libraries (arm64)
-        run: clickable build --libs --arch arm64 -c packaging/click/slim-build.yaml
+      - name: Build libraries (${{ matrix.arch }})
+        run: clickable build --libs --arch ${{ matrix.arch }} -c packaging/click/slim-build.yaml
 
-      - name: Build click (arm64)
-        run: clickable build --arch arm64 -c packaging/click/slim-build.yaml
+      - name: Build click (${{ matrix.arch }})
+        run: clickable build --arch ${{ matrix.arch }} -c packaging/click/slim-build.yaml
 
       - name: Upload click
         uses: actions/upload-artifact@v4
         with:
-          name: padyab-maps-click-arm64
+          name: padyab-maps-click-${{ matrix.arch }}
           path: build/*/app/*.click
 
       - name: Attach click to the release
