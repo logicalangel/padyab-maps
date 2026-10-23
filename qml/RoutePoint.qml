@@ -22,30 +22,84 @@ import pm.platform 1.0
 
 import "js/util.js" as Util
 
-ValueButtonPL {
-    height: Math.max(styler.themeItemSizeSmall, implicitHeight)
-    value: text
-    // Avoid putting label and value on different lines.
-    width: 3 * parent.width
+// Location selector shown as a card row: colored dot, label and the
+// selected place. Grouped rows are drawn without their own card, to be
+// placed in a card together with other rows.
+Item {
+    id: point
+    height: card.height
+    width: parent.width
 
     property string comment
     property var    coordinates: null
-
+    property color  dotColor: styler.route
+    property bool   grouped: false
+    property string label
     property string query
     property string text
     property string title
 
     signal updated;
 
-    BusyIndicatorSmallPL {
-        anchors.right: parent.right
-        anchors.rightMargin: styler.themeHorizontalPageMargin + (parent.width - page.width)
-        anchors.verticalCenter: parent.verticalCenter
-        running: text === app.tr("Current position") && !gps.coordinateValid
-        z: parent.z + 1
-    }
+    Rectangle {
+        id: card
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: mouse.pressed ? styler.itemPressed : (grouped ? "transparent" : styler.itemBg)
+        height: Math.max(texts.height + 2*styler.themePaddingLarge, styler.themeItemSizeSmall)
+        radius: styler.cardRadius
+        width: grouped ? parent.width : parent.width - 2*styler.themeHorizontalPageMargin
 
-    onClicked: activate()
+        Rectangle {
+            id: dot
+            anchors.left: parent.left
+            anchors.leftMargin: styler.themePaddingLarge
+            anchors.verticalCenter: parent.verticalCenter
+            color: dotColor
+            height: Math.round(styler.themeFontSizeMedium * 0.9)
+            radius: height / 2
+            width: height
+        }
+
+        Column {
+            id: texts
+            anchors.left: dot.right
+            anchors.leftMargin: styler.themePaddingLarge
+            anchors.right: busy.running ? busy.left : parent.right
+            anchors.rightMargin: styler.themePaddingLarge
+            anchors.verticalCenter: parent.verticalCenter
+
+            LabelPL {
+                color: styler.itemFg
+                font.pixelSize: styler.themeFontSizeSmall
+                opacity: 0.6
+                text: point.label
+                width: parent.width
+            }
+
+            LabelPL {
+                color: styler.itemFg
+                font.pixelSize: styler.themeFontSizeLarge
+                opacity: point.text ? 1 : 0.4
+                text: point.text ? point.text : app.tr("Choose")
+                truncMode: truncModes.fade
+                width: parent.width
+            }
+        }
+
+        BusyIndicatorSmallPL {
+            id: busy
+            anchors.right: parent.right
+            anchors.rightMargin: styler.themePaddingLarge
+            anchors.verticalCenter: parent.verticalCenter
+            running: point.text === app.tr("Current position") && !gps.coordinateValid
+        }
+
+        MouseArea {
+            id: mouse
+            anchors.fill: parent
+            onClicked: activate()
+        }
+    }
 
     function activate() {
         var dialog = app.push(Qt.resolvedUrl("RoutePointPage.qml"), {

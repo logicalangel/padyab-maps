@@ -22,7 +22,7 @@ import pm.platform 1.0
 
 DialogPL {
     id: page
-    title: app.tr("Navigation")
+    title: app.tr("Directions")
 
     acceptIconName: {
         if (followMe)
@@ -167,18 +167,56 @@ DialogPL {
                 }
             }
 
-            RoutePoint {
-                id: fromButton
-                label: app.tr("From")
-                title: app.tr("Origin")
-                visible: page.fromNeeded
+            Rectangle {
+                // origin and destination in one card
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: styler.itemBg
+                height: placesColumn.height
+                radius: styler.cardRadius
+                visible: page.fromNeeded || page.toNeeded
+                width: parent.width - 2*styler.themeHorizontalPageMargin
+
+                Column {
+                    id: placesColumn
+                    width: parent.width
+
+                    RoutePoint {
+                        id: fromButton
+                        grouped: true
+                        label: app.tr("From")
+                        title: app.tr("Origin")
+                        visible: page.fromNeeded
+                    }
+
+                    Rectangle {
+                        // divider between origin and destination
+                        anchors.right: parent.right
+                        color: styler.itemFg
+                        height: 1
+                        opacity: 0.1
+                        visible: page.fromNeeded && page.toNeeded
+                        width: parent.width - 2*styler.themePaddingLarge - Math.round(styler.themeFontSizeMedium * 0.9)
+                    }
+
+                    RoutePoint {
+                        id: toButton
+                        dotColor: styler.endBg
+                        grouped: true
+                        label: app.tr("To")
+                        title: app.tr("Destination")
+                        visible: page.toNeeded
+                    }
+                }
             }
 
-            RoutePoint {
-                id: toButton
-                label: app.tr("To")
-                title: app.tr("Destination")
-                visible: page.toNeeded
+            ActionTile {
+                // finds the route, same as accepting the page
+                anchors.horizontalCenter: parent.horizontalCenter
+                enabled: page.canNavigateForward
+                label: page.acceptText
+                primary: true
+                width: parent.width - 2*styler.themeHorizontalPageMargin
+                onClicked: page.accept()
             }
 
             TextSwitchPL {
@@ -423,7 +461,7 @@ DialogPL {
 
             property int numberOfRoutes: 2
 
-            SectionHeaderPL {
+            SectionLabel {
                 text: app.tr("Routes")
             }
 
@@ -536,7 +574,7 @@ DialogPL {
             anchors.right: parent.right
             visible: !followMe && !page.to && page.toNeeded
 
-            SectionHeaderPL {
+            SectionLabel {
                 text: app.tr("Destinations")
             }
 

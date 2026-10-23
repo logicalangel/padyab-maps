@@ -168,7 +168,7 @@ MouseArea {
 
                         MenuRow {
                             iconSource: app.getIcon("icons/route")
-                            label: app.tr("Navigation")
+                            label: app.tr("Directions")
                             onClicked: master.push("RoutePage.qml")
                         }
 

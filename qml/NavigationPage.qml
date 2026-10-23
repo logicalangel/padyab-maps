@@ -156,14 +156,7 @@ PagePL {
             }
         }
 
-        LabelPL {
-            // section title
-            anchors.left: parent.left
-            anchors.leftMargin: styler.themeHorizontalPageMargin + styler.themePaddingLarge
-            color: styler.themeHighlightColor
-            font.bold: true
-            font.pixelSize: styler.themeFontSizeMedium
-            opacity: 0.6
+        SectionLabel {
             text: app.tr("Destinations and waypoints")
             visible: locations.visible
         }
@@ -297,14 +290,7 @@ PagePL {
             }
         }
 
-        LabelPL {
-            // section title
-            anchors.left: parent.left
-            anchors.leftMargin: styler.themeHorizontalPageMargin + styler.themePaddingLarge
-            color: styler.themeHighlightColor
-            font.bold: true
-            font.pixelSize: styler.themeFontSizeMedium
-            opacity: 0.6
+        SectionLabel {
             text: app.tr("Maneuvers")
         }
 
