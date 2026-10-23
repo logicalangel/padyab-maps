@@ -150,6 +150,37 @@ Item {
                                                 model.type === "subquery"
                 property bool visited: model.visited
 
+                // round badge with an icon telling the kind of the item
+                property string badgeIcon: {
+                    if (model.type === "current position") return styler.iconDot;
+                    if (model.type === "poi") return styler.iconFavoriteSelected;
+                    if (model.type === "recent search") return styler.iconSearch;
+                    if (model.type === "autocomplete" || model.type === "result") return styler.iconNearby;
+                    return "";
+                }
+                property real badgeSize: Math.round(styler.themeIconSizeSmall * 1.1)
+                property real textMargin: badgeIcon ? styler.themeHorizontalPageMargin + badgeSize + styler.themePaddingLarge :
+                                                      styler.themeHorizontalPageMargin
+
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.leftMargin: styler.themeHorizontalPageMargin
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: Qt.rgba(_c.r, _c.g, _c.b, 0.12)
+                    height: listItem.badgeSize
+                    radius: height / 2
+                    visible: listItem.badgeIcon !== ""
+                    width: height
+
+                    property color _c: model.type === "current position" ? styler.route : styler.themePrimaryColor
+
+                    IconPL {
+                        anchors.centerIn: parent
+                        iconHeight: Math.round(parent.height * 0.55)
+                        iconName: listItem.badgeIcon
+                    }
+                }
+
                 Column {
                     id: itemColumn
                     anchors.left: parent.left
@@ -170,7 +201,7 @@ Item {
                     }
 
                     ListItemLabel {
-                        //anchors.leftMargin: searchField.textLeftMargin
+                        anchors.leftMargin: listItem.textMargin
                         color: (listItem.highlighted || listItem.visited || !listItem.enabled) ?
                                    styler.themeHighlightColor : styler.themePrimaryColor
                         height: visible ? implicitHeight : 0
@@ -180,7 +211,7 @@ Item {
                     }
 
                     ListItemLabel {
-                        //anchors.leftMargin: searchField.textLeftMargin
+                        anchors.leftMargin: listItem.textMargin
                         color: listItem.highlighted ? styler.themeSecondaryHighlightColor : styler.themeSecondaryColor
                         font.pixelSize: styler.themeFontSizeExtraSmall
                         height: visible ? implicitHeight : 0

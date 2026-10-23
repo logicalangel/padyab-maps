@@ -770,29 +770,11 @@ PagePL {
                     }
 
                     TextSwitchPL {
-                        checked: app.conf.mapModeCleanShowMenuButton
-                        text: app.tr("Menu")
-                        onCheckedChanged: {
-                            if (app.conf.mapModeCleanShowMenuButton!==checked)
-                                app.conf.set("map_mode_clean_show_menu_button", checked);
-                        }
-                    }
-
-                    TextSwitchPL {
                         checked: app.conf.mapModeCleanShowCenter
                         text: app.tr("Center on current location")
                         onCheckedChanged: {
                             if (app.conf.mapModeCleanShowCenter!==checked)
                                 app.conf.set("map_mode_clean_show_center", checked);
-                        }
-                    }
-
-                    TextSwitchPL {
-                        checked: app.conf.mapModeCleanShowCompass
-                        text: app.tr("Compass")
-                        onCheckedChanged: {
-                            if (app.conf.mapModeCleanShowCompass!==checked)
-                                app.conf.set("map_mode_clean_show_compass", checked);
                         }
                     }
 
@@ -806,15 +788,6 @@ PagePL {
                     }
 
                     TextSwitchPL {
-                        checked: app.conf.mapModeCleanShowMeters
-                        text: app.tr("Speed and location precision")
-                        onCheckedChanged: {
-                            if (app.conf.mapModeCleanShowMeters!==checked)
-                                app.conf.set("map_mode_clean_show_meters", checked);
-                        }
-                    }
-
-                    TextSwitchPL {
                         checked: app.conf.mapModeCleanShowScale
                         text: app.tr("Scale")
                         onCheckedChanged: {
@@ -824,38 +797,11 @@ PagePL {
                     }
 
                     TextSwitchPL {
-                        checked: app.conf.mapModeCleanShowGeocode
-                        text: app.tr("Search")
-                        onCheckedChanged: {
-                            if (app.conf.mapModeCleanShowGeocode!==checked)
-                                app.conf.set("map_mode_clean_show_geocode", checked);
-                        }
-                    }
-
-                    TextSwitchPL {
-                        checked: app.conf.mapModeCleanShowNavigate
-                        text: app.tr("Navigate")
-                        onCheckedChanged: {
-                            if (app.conf.mapModeCleanShowNavigate!==checked)
-                                app.conf.set("map_mode_clean_show_navigate", checked);
-                        }
-                    }
-
-                    TextSwitchPL {
                         checked: app.conf.mapModeCleanShowNavigationStartPause
                         text: app.tr("Navigation Start/Pause")
                         onCheckedChanged: {
                             if (app.conf.mapModeCleanShowNavigationStartPause!==checked)
                                 app.conf.set("map_mode_clean_show_navigation_start_pause", checked);
-                        }
-                    }
-
-                    TextSwitchPL {
-                        checked: app.conf.mapModeCleanShowNavigationClear
-                        text: app.tr("Navigation Clear Route")
-                        onCheckedChanged: {
-                            if (app.conf.mapModeCleanShowNavigationClear!==checked)
-                                app.conf.set("map_mode_clean_show_navigation_clear", checked);
                         }
                     }
 

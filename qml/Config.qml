@@ -42,13 +42,7 @@ Item {
     property bool   mapModeCleanOnStart
     property bool   mapModeCleanShowBasemap
     property bool   mapModeCleanShowCenter
-    property bool   mapModeCleanShowCompass
-    property bool   mapModeCleanShowGeocode
-    property bool   mapModeCleanShowMenuButton
-    property bool   mapModeCleanShowMeters
-    property bool   mapModeCleanShowNavigate
     property bool   mapModeCleanShowNavigationStartPause
-    property bool   mapModeCleanShowNavigationClear
     property bool   mapModeCleanShowScale
     property real   mapScale: 1
     property real   mapScaleNavigation: {
@@ -123,13 +117,7 @@ Item {
         "mapModeCleanOnStart": "map_mode_clean_on_start",
         "mapModeCleanShowBasemap": "map_mode_clean_show_basemap",
         "mapModeCleanShowCenter": "map_mode_clean_show_center",
-        "mapModeCleanShowCompass": "map_mode_clean_show_compass",
-        "mapModeCleanShowGeocode": "map_mode_clean_show_geocode",
-        "mapModeCleanShowMeters": "map_mode_clean_show_meters",
-        "mapModeCleanShowMenuButton": "map_mode_clean_show_menu_button",
-        "mapModeCleanShowNavigate": "map_mode_clean_show_navigate",
         "mapModeCleanShowNavigationStartPause": "map_mode_clean_show_navigation_start_pause",
-        "mapModeCleanShowNavigationClear": "map_mode_clean_show_navigation_clear",
         "mapModeCleanShowScale": "map_mode_clean_show_scale",
         "mapScale": "map_scale",
         "mapScaleNavigationBicycle": "map_scale_navigation_bicycle",

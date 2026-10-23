@@ -24,10 +24,10 @@ Rectangle {
     anchors.top: referenceBlockTop.bottom
     anchors.topMargin: styler.themePaddingLarge
     anchors.horizontalCenter: parent.horizontalCenter
-    color: styler.blockBg
+    color: styler.itemBg
     height: label.height + 2*padding
     opacity: currentText ? 1 : 0
-    radius: 0.85 * padding
+    radius: Math.min(height / 2, styler.cardRadius * 1.4)
     visible: !app.modalDialog && label.text
     width: label.width + 2*padding
     z: 400
@@ -42,9 +42,9 @@ Rectangle {
     }
     property string lastText
     // Padding on the edges
-    property real   padding: 1.5 * styler.themePaddingMedium
+    property real   padding: styler.themePaddingLarge
     property var    stack: []
-    property real   widthLimit: parent.width / 2
+    property real   widthLimit: parent.width - 6*padding
 
     Behavior on opacity {
         OpacityAnimator {
@@ -54,12 +54,19 @@ Rectangle {
         }
     }
 
+    CardShadow {
+        // drawn below the toast
+        target: rect
+        z: -1
+    }
+
     LabelPL {
         id: label
         anchors.centerIn: rect
-        color: styler.themeHighlightColor
+        color: styler.itemFg
+        font.bold: true
         font.family: styler.themeFontFamily
-        font.pixelSize: styler.themeFontSizeSmall
+        font.pixelSize: styler.themeFontSizeMedium
         horizontalAlignment: Text.AlignHCenter
         lineHeight: 1.1
         text: currentText ? currentText : lastText

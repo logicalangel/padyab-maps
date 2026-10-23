@@ -81,6 +81,6 @@ MapButton {
     }
 
     property bool hidden: ((app.infoPanelOpen ||
-                            (map.cleanMode && !app.conf.mapModeCleanShowNavigationClear))
+                            (map.cleanMode && !app.conf.mapModeCleanShowNavigationStartPause))
                            && !map.showNavButtons) || app.modalDialog
 }

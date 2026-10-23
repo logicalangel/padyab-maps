@@ -22,7 +22,8 @@ import pm.platform 1.0
 Rectangle {
     id: panel
     anchors.left: parent.left
-    anchors.right: parent.right
+    // in landscape, the card covers only the left side like the other sheets
+    width: app.portrait ? parent.width : Math.round(parent.width * 0.42) + 2*_margin
     // the panel is drawn as a floating card inside its area
     color: "transparent"
     height: 0
@@ -77,7 +78,7 @@ Rectangle {
         anchors.fill: parent
         anchors.bottomMargin: panel.mode === panelModes.bottom ? _margin : 0
         anchors.leftMargin: _margin
-        anchors.rightMargin: _margin
+        anchors.rightMargin: app.portrait ? _margin : 0
         anchors.topMargin: panel.mode === panelModes.top ? _margin : 0
         color: styler.itemBg
         radius: styler.cardRadius * 1.4

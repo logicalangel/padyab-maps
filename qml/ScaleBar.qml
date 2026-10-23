@@ -59,11 +59,12 @@ MouseArea {
            (_rotate ? scaleBar.height : scaleBar.scaleBarMaxLength)
     z: 300
 
+    // shown for a moment after the zoom changes, unless always shown in preferences
     property bool hidden: app.modalDialog || app.infoPanelOpen ||
-                          (!_recentlyUpdated && map.cleanMode && !app.conf.mapModeCleanShowScale)
+                          (!_recentlyUpdated && !app.conf.mapModeCleanShowScale)
 
     property bool _recentlyUpdated: false
-    property bool _rotate: !((app.mode === modes.navigate || app.mode === modes.followMe || app.mode === modes.navigatePost) && !app.portrait)
+    property bool _rotate: false
 
     Behavior on opacity { NumberAnimation { property: "opacity"; duration: app.conf.animationDuration; } }
 
