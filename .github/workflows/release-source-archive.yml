@@ -21,8 +21,9 @@ jobs:
         env:
           TAG: ${{ github.event.release.tag_name }}
         run: |
-          version="${TAG#pure-maps-}"
-          archive="pure-maps-${version}.tar.gz"
+          # tags are v0.1.0, v0.1.0-beta...: the archive is padyab-maps-0.1.0[-beta]
+          version="${TAG#v}"
+          archive="padyab-maps-${version}.tar.gz"
           timestamp="$(git log -1 --format=%ct)"
 
           tar \
@@ -33,7 +34,7 @@ jobs:
             --exclude-vcs \
             --sort=name \
             --mtime="@$timestamp" \
-            --transform="s,^\./,pure-maps-${version}/," \
+            --transform="s,^\./,padyab-maps-${version}/," \
             .
 
           echo "path=$RUNNER_TEMP/$archive" >> "$GITHUB_OUTPUT"
