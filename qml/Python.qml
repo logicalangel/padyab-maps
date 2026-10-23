@@ -33,7 +33,8 @@ Python {
         py.error.connect(handleError);
 
         addImportPath(dataDirectory);
-        addImportPath(Qt.resolvedUrl(dataDirectory + "/thirdparty/gpxpy"));
+        // plain path: Qt.resolvedUrl breaks the relative data directory of click packages
+        addImportPath(dataDirectory + "/thirdparty/gpxpy");
         importModule("poor", function() {
             py.call("poor.main", [], function() {
                 py.ready = true;
